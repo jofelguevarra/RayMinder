@@ -29,3 +29,8 @@ C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\RayMinder.Api.dll
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\refint\RayMinder.Api.dll
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\RayMinder.Api.pdb
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\RayMinder.Api.deps.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\RayMinder.Api.runtimeconfig.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\RayMinder.Api.pdb
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\RayMinder.Api.genruntimeconfig.cache
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\ref\RayMinder.Api.dll
