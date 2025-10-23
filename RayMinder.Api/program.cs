@@ -19,8 +19,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();    
-app.UseStaticFiles();     
+// This will serve index.html automatically at http://localhost:5007/
+app.UseDefaultFiles();   
+
+// This enables serving static files from wwwroot folder
+app.UseStaticFiles();
 
 app.UseCors("AllowAll");
 
@@ -30,7 +33,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Optional: Disable HTTPS redirection since you are serving on http only
+// app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
