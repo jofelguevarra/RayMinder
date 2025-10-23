@@ -4,6 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set Kestrel to listen on port 5007 instead of default port
+builder.WebHost.UseUrls("http://localhost:5007");
+
 // Add services to the container
 builder.Services.AddControllers();
 
