@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RayMinder.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf6f07aa4e20fe0d38329ac6c0e06b09cf15daf4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e72bf1c25279300706e1a69c984fb499310eb2b")]
 [assembly: System.Reflection.AssemblyProductAttribute("RayMinder.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RayMinder.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

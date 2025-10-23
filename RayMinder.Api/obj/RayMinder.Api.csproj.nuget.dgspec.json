@@ -39,22 +39,12 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
@@ -79,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.121/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"NEHyXoSZ+EFRi9hcESTKuPjzMZdkvOjDgYHRrrcVP0Y=","Source":"RayMinder.Api","BasePath":"_content/RayMinder.Api","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "aLXO3u8wYG9ft42TrmZIZ8JqPjgCu93RAwr6V2K9KN4=",
+  "Source": "RayMinder.Api",
+  "BasePath": "_content/RayMinder.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
