@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background: #f8f9fa;
@@ -5,6 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  margin: 0; /* remove default margin */
 }
 
 .container {
@@ -18,24 +25,25 @@ body {
 
 h1 {
   color: #333;
+  margin-bottom: 1rem;
 }
 
-input {
+input, button {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
-  border: 1px solid #ccc;
   border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  display: block;
 }
 
 button {
-  width: 100%;
-  padding: 10px;
   background: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 button:hover {

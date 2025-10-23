@@ -1,39 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
-using RayMinder.Api.Helpers;
-using RayMinder.Api.Models;
 
 namespace RayMinder.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UserController : ControllerBase
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
     {
-        // Simple in-memory list (you can later replace with database)
-        private static readonly List<User> Users = new();
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
+        {
+            // For testing purposes: accept any username/password
+            if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
+            {
+                return Ok(new { message = "Login successful" });
+            }
+            return Unauthorized(new { message = "Invalid username or password" });
+        }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User user)
+        public IActionResult Register([FromBody] RegisterRequest request)
         {
-            if (Users.Any(u => u.Username == user.Username))
-                return BadRequest("Username already exists.");
-
-            var hashedPassword = PasswordHelper.HashPassword(user.PasswordHash);
-            Users.Add(new User { Username = user.Username, PasswordHash = hashedPassword });
-
-            return Ok("User registered successfully.");
-        }
-
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] User user)
-        {
-            var hashedPassword = PasswordHelper.HashPassword(user.PasswordHash);
-            var existingUser = Users.FirstOrDefault(u =>
-                u.Username == user.Username && u.PasswordHash == hashedPassword);
-
-            if (existingUser == null)
-                return Unauthorized("Invalid username or password.");
-
-            return Ok("Login successful.");
+            if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
+            {
+                // Here you would typically save the user info in the database
+                return Ok(new { message = $"User '{request.Username}' registered successfully" });
+            }
+            return BadRequest(new { message = "Username and password are required" });
         }
     }
+
+    public record LoginRequest(string Username, string Password);
+    public record RegisterRequest(string Username, string Password);
 }

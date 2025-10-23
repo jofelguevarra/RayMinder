@@ -1,84 +1,71 @@
-// === CONFIGURATION ===
-// Use your API address (update port as needed)
-const API_BASE_URL = "http://localhost:5006"; 
-// For Android emulator -> "https://10.0.2.2:7182"
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const messageDiv = document.getElementById('message');
 
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  const registerForm = document.getElementById("registerForm");
-  const messageBox = document.getElementById("message");
-
-  // Handle Login
   if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      messageDiv.textContent = ''; // Clear previous messages
 
-      const payload = {
-        username: username,
-        passwordHash: password // same as API property
+      const data = {
+        username: loginForm.username.value,
+        password: loginForm.password.value
       };
 
       try {
-        const response = await fetch(`${API_BASE_URL}/User/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        const response = await fetch('http://localhost:5007/api/auth/login', {  // adjust endpoint accordingly
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
 
-        const text = await response.text();
-
         if (response.ok) {
-          showMessage("✅ Login successful!", "success");
-          // Redirect to dashboard (create dashboard.html later)
-          setTimeout(() => window.location.href = "dashboard.html", 1000);
+          messageDiv.textContent = 'Login successful!';
+          messageDiv.style.color = 'green';
+          // You could redirect user to dashboard or something here
         } else {
-          showMessage("❌ " + text, "error");
+          const error = await response.json();
+          messageDiv.textContent = error.message || 'Login failed';
+          messageDiv.style.color = 'red';
         }
       } catch (err) {
-        showMessage("⚠️ " + err.message, "error");
+        messageDiv.textContent = 'Network error: ' + err.message;
+        messageDiv.style.color = 'red';
       }
     });
   }
 
-  // Handle Registration
   if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
+    registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const username = document.getElementById("regUsername").value;
-      const password = document.getElementById("regPassword").value;
+      messageDiv.textContent = ''; // Clear previous messages
 
-      const payload = {
-        username: username,
-        passwordHash: password
+      const data = {
+        username: registerForm.regUsername.value,
+        password: registerForm.regPassword.value
       };
 
       try {
-        const response = await fetch(`${API_BASE_URL}/User/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+        const response = await fetch('http://localhost:5007/api/auth/register', {  // adjust endpoint accordingly
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
 
-        const text = await response.text();
-
         if (response.ok) {
-          showMessage("✅ Registration successful! Redirecting...", "success");
-          setTimeout(() => window.location.href = "index.html", 1000);
+          messageDiv.textContent = 'Account created successfully!';
+          messageDiv.style.color = 'green';
+          registerForm.reset();
         } else {
-          showMessage("❌ " + text, "error");
+          const error = await response.json();
+          messageDiv.textContent = error.message || 'Registration failed';
+          messageDiv.style.color = 'red';
         }
       } catch (err) {
-        showMessage("⚠️ " + err.message, "error");
+        messageDiv.textContent = 'Network error: ' + err.message;
+        messageDiv.style.color = 'red';
       }
     });
-  }
-
-  // Show message helper
-  function showMessage(msg, type) {
-    if (!messageBox) return;
-    messageBox.textContent = msg;
-    messageBox.className = type;
   }
 });
