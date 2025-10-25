@@ -3,25 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RayMinder Dashboard</title>
+  <title>RayMinder</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #e0f7fa, #fff);
+      background: linear-gradient(180deg, #fefcea, #f1f8e9);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       height: 100vh;
       margin: 0;
-      padding-top: 40px;
+      padding-top: 30px;
       text-align: center;
     }
 
     h1 {
-      color: #00796b;
-      margin-bottom: 20px;
+      color: #ff9800;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .nav-tabs {
+      font-size: 1.1em;
+      color: #616161;
+      margin-bottom: 40px;
+    }
+
+    .nav-tabs span {
+      cursor: pointer;
+      padding: 0 15px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-tabs span.active {
+      color: #ff9800;
+      border-bottom: 2px solid #ff9800;
     }
 
     #uv-circle {
@@ -29,29 +49,63 @@
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      background: conic-gradient(#4caf50 calc(var(--uv-index) * 10%), #e0e0e0 0);
+      background: radial-gradient(circle at center, #fff176 40%, #fbc02d 80%);
+      box-shadow: 0 0 30px #ffeb3b;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 30px;
-      transition: background 0.5s ease;
+      margin-bottom: 50px;
+      transition: all 0.5s ease;
     }
 
     #uv-value {
       position: absolute;
-      font-size: 2.5em;
+      font-size: 3em;
       font-weight: bold;
-      color: #004d40;
+      color: #e65100;
+      text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
     }
 
-    #timer {
-      font-size: 2em;
-      font-weight: bold;
-      margin-bottom: 20px;
+    /* Timer bar container */
+    #timer-container {
+      width: 80%;
+      max-width: 400px;
+      height: 30px;
+      background-color: #eeeeee;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 30px;
+      position: relative;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    /* The bar that shrinks */
+    #timer-bar {
+      height: 100%;
+      width: 100%;
+      background-color: #4caf50;
+      transition: width 1s linear, background-color 0.5s;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+      box-sizing: border-box;
+    }
+
+    /* Timer text inside bar */
+    #timer-text {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1em;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
 
     #reapply-btn {
-      background-color: #00796b;
+      background-color: #ff9800;
       color: white;
       border: none;
       padding: 12px 24px;
@@ -62,7 +116,7 @@
     }
 
     #reapply-btn:hover {
-      background-color: #004d40;
+      background-color: #e65100;
     }
 
     #alert-message {
@@ -74,13 +128,20 @@
   </style>
 </head>
 <body>
-  <h1>Your Sun Safety Dashboard</h1>
+  <h1>RayMinder</h1>
+  <div class="nav-tabs">
+    <span class="active">You</span> | <span id="friendsTab">Friends</span>
+  </div>
 
-  <div id="uv-circle" style="--uv-index: 5;">
+  <div id="uv-circle">
     <span id="uv-value">5</span>
   </div>
 
-  <div id="timer">20:00</div>
+  <div id="timer-container">
+    <div id="timer-bar"></div>
+    <div id="timer-text">20:00</div>
+  </div>
+
   <button id="reapply-btn">I Reapplied</button>
 
   <div id="alert-message"></div>
