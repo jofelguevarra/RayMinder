@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using RayMinder.Api.Data;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.WebHost.UseUrls("http://localhost:5007");
 

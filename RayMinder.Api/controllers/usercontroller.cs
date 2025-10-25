@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RayMinder.Api.Data;
+using RayMinder.Api.Models;
 
 namespace RayMinder.Api.Controllers
 {
@@ -6,26 +9,50 @@ namespace RayMinder.Api.Controllers
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest request)
+        private readonly AppDbContext _context;
+
+        public AuthController(AppDbContext context)
         {
-            // For testing purposes: accept any username/password
-            if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
-            {
-                return Ok(new { message = "Login successful" });
-            }
-            return Unauthorized(new { message = "Invalid username or password" });
+            _context = context;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+                return BadRequest(new { message = "Username and password are required" });
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == request.Username && u.Password == request.Password);
+
+            if (user == null)
+                return Unauthorized(new { message = "Invalid username or password" });
+
+            return Ok(new { message = "Login successful" });
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            if (!string.IsNullOrEmpty(request.Username) && !string.IsNullOrEmpty(request.Password))
+            if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
+                return BadRequest(new { message = "Username and password are required" });
+
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == request.Username);
+
+            if (existingUser != null)
+                return BadRequest(new { message = "Username already exists" });
+
+            var user = new User
             {
-                // Here you would typically save the user info in the database
-                return Ok(new { message = $"User '{request.Username}' registered successfully" });
-            }
-            return BadRequest(new { message = "Username and password are required" });
+                Username = request.Username,
+                Password = request.Password
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = $"User '{request.Username}' registered successfully" });
         }
     }
 
