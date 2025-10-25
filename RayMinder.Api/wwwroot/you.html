@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RayMinder Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #e0f7fa, #fff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding-top: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #00796b;
+      margin-bottom: 20px;
+    }
+
+    #uv-circle {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(#4caf50 calc(var(--uv-index) * 10%), #e0e0e0 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      transition: background 0.5s ease;
+    }
+
+    #uv-value {
+      position: absolute;
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #004d40;
+    }
+
+    #timer {
+      font-size: 2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #reapply-btn {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #reapply-btn:hover {
+      background-color: #004d40;
+    }
+
+    #alert-message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Sun Safety Dashboard</h1>
+
+  <div id="uv-circle" style="--uv-index: 5;">
+    <span id="uv-value">5</span>
+  </div>
+
+  <div id="timer">20:00</div>
+  <button id="reapply-btn">I Reapplied</button>
+
+  <div id="alert-message"></div>
+
+  <script src="you.js"></script>
+</body>
+</html>
