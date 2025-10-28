@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      messageDiv.textContent = ''; // Clear previous messages
+      messageDiv.textContent = '';
 
       const data = {
         username: loginForm.username.value,
@@ -14,19 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5007/api/auth/login', {  // adjust endpoint accordingly
+        const response = await fetch('http://localhost:5007/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
 
+        const result = await response.json();
+
         if (response.ok) {
+          // Store username so we can use it later (e.g., in location tracking)
+          localStorage.setItem('username', data.username);
+
           messageDiv.textContent = 'Login successful!';
           messageDiv.style.color = 'green';
-          // You could redirect user to dashboard or something here
+
+          // Redirect to dashboard
+          setTimeout(() => {
+            window.location.href = 'you.html';
+          }, 1000);
         } else {
-          const error = await response.json();
-          messageDiv.textContent = error.message || 'Login failed';
+          messageDiv.textContent = result.message || 'Login failed';
           messageDiv.style.color = 'red';
         }
       } catch (err) {
@@ -39,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      messageDiv.textContent = ''; // Clear previous messages
+      messageDiv.textContent = '';
 
       const data = {
         username: registerForm.regUsername.value,
@@ -47,19 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5007/api/auth/register', {  // adjust endpoint accordingly
+        const response = await fetch('http://localhost:5007/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
+
+        const result = await response.json();
 
         if (response.ok) {
           messageDiv.textContent = 'Account created successfully!';
           messageDiv.style.color = 'green';
           registerForm.reset();
         } else {
-          const error = await response.json();
-          messageDiv.textContent = error.message || 'Registration failed';
+          messageDiv.textContent = result.message || 'Registration failed';
           messageDiv.style.color = 'red';
         }
       } catch (err) {

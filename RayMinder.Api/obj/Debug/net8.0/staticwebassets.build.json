@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bwk50ajVnjea1uXEhPkTe1M4ywlwZ11/BnXnfUJDGFE=",
+  "Hash": "+z3oodkofbmB0rl3qnc5fBQHg+lFJ12/KziC+i7txh8=",
   "Source": "RayMinder.Api",
   "BasePath": "_content/RayMinder.Api",
   "Mode": "Default",
@@ -34,6 +34,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\location.js",
+      "SourceId": "RayMinder.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "BasePath": "_content/RayMinder.Api",
+      "RelativePath": "location.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\location.js"
     },
     {
       "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\register.html",
