@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timerInterval;
   let uvIndex = 5;
 
-  async function fetchUV() {
+  async function fetchUV() { //Get UV index (just a sample for now, real sensor later)
     try {
       const response = await fetch('http://localhost:5007/api/uv/current');
       const data = await response.json();
