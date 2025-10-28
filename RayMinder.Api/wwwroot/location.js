@@ -39,6 +39,8 @@ function trackUserLocation() {
     return;
   }
 
+    alert("Requesting location permission...");
+    
   // Watch position (updates as the user moves)
   navigator.geolocation.watchPosition(
     (position) => {
