@@ -5,48 +5,46 @@ using RayMinder.Api.Models;
 namespace RayMinder.Api.Controllers
 {
     [ApiController]
-    [Route("api/locations")]
-    public class LocationsController : ControllerBase
+    [Route("api/location")]
+    public class LocationController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public LocationsController(AppDbContext context)
+        public LocationController(AppDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet]
-        public IActionResult GetAllLocations()
+        // Save or update a user's location
+        [HttpPost("update")]
+        public IActionResult UpdateLocation([FromBody] Location request)
         {
-            var locations = _context.Locations.ToList();
-            return Ok(locations);
-        }
-
-        [HttpPost]
-        public IActionResult UpdateLocation([FromBody] Location location)
-        {
-            if (string.IsNullOrEmpty(location.Username))
+            if (string.IsNullOrEmpty(request.Username))
                 return BadRequest(new { message = "Username is required" });
 
-            // Find existing location for the user
-            var existing = _context.Locations.FirstOrDefault(l => l.Username == location.Username);
+            var userLocation = _context.Locations.FirstOrDefault(l => l.Username == request.Username);
 
-            if (existing != null)
+            if (userLocation == null)
             {
-                existing.Latitude = location.Latitude;
-                existing.Longitude = location.Longitude;
-                existing.Timestamp = DateTime.UtcNow;
-                _context.Locations.Update(existing);
+                _context.Locations.Add(request);
             }
             else
             {
-                location.Timestamp = DateTime.UtcNow;
-                _context.Locations.Add(location);
+                userLocation.Latitude = request.Latitude;
+                userLocation.Longitude = request.Longitude;
+                userLocation.Time = DateTime.UtcNow;
             }
 
             _context.SaveChanges();
-
             return Ok(new { message = "Location updated successfully" });
+        }
+
+        // Get all users' locations
+        [HttpGet]
+        public IActionResult GetLocations()
+        {
+            var locations = _context.Locations.ToList();
+            return Ok(locations);
         }
     }
 }
