@@ -11,6 +11,7 @@ namespace RayMinder.Api.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Location> Locations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
