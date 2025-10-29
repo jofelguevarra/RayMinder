@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
   startTimer();
   setInterval(fetchUV, 30000);
 
-  document.getElementById('friendsTab').addEventListener('click', () => {
-    alert("Friends page coming soon!");
-  });
+  document.getElementById("friendsTab").addEventListener("click", () => {
+  window.location.href = "friends.html";
+});
 });
