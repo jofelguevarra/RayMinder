@@ -6,16 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const timerBar = document.getElementById('timer-bar');
   const reapplyBtn = document.getElementById('reapply-btn');
   const alertMsg = document.getElementById('alert-message');
-  
-});
-
 
   let timerDuration = 20 * 60; // default 20 minutes
   let timeRemaining = timerDuration;
   let timerInterval;
   let uvIndex = 5;
 
-  async function fetchUV() { //Get UV index (just a sample for now, real sensor later)
+  async function fetchUV() { // Get UV index (just a sample for now)
     try {
       const response = await fetch('http://localhost:5007/api/uv/current');
       const data = await response.json();
@@ -90,11 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
     startTimer();
   });
 
+  // Start fetching and timing
   fetchUV();
   startTimer();
   setInterval(fetchUV, 30000);
 
+  // Navigate to friends page
   document.getElementById("friendsTab").addEventListener("click", () => {
-  window.location.href = "friends.html";
-});
+    window.location.href = "friends.html";
+  });
 });
