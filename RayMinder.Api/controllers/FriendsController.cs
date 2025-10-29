@@ -63,7 +63,7 @@ namespace RayMinder.Api.Controllers
             // Create a notification for the friend being added
             var notification = new FriendNotification
             {
-                Username = friend.FriendUsername,  // the receiver
+                Username = friend.FriendUsername,  // receiver
                 Message = $"{friend.Username} added you as a friend!",
                 IsRead = false
             };
@@ -72,6 +72,39 @@ namespace RayMinder.Api.Controllers
             _context.SaveChanges();
 
             return Ok(new { message = "Friend added successfully and notification sent!" });
+        }
+
+        // GET: api/friends/notifications/{username}
+        [HttpGet("notifications/{username}")]
+        public IActionResult GetNotifications(string username)
+        {
+            var notifications = _context.FriendNotifications
+                .Where(n => n.Username == username)
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new
+                {
+                    n.Id,
+                    n.Message,
+                    n.IsRead,
+                    n.CreatedAt
+                })
+                .ToList();
+
+            return Ok(notifications);
+        }
+
+        // Optional: mark notification as read
+        [HttpPost("notifications/read/{id}")]
+        public IActionResult MarkNotificationAsRead(int id)
+        {
+            var notification = _context.FriendNotifications.FirstOrDefault(n => n.Id == id);
+            if (notification == null)
+                return NotFound(new { message = "Notification not found." });
+
+            notification.IsRead = true;
+            _context.SaveChanges();
+
+            return Ok(new { message = "Notification marked as read." });
         }
     }
 }
