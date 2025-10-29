@@ -153,9 +153,11 @@ C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets\msbuild.RayMinder.Api.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets\msbuild.build.RayMinder.Api.props
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.RayMinder.Api.props
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.RayMinder.Api.props
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\RayMinder.Api.csproj.CopyComplete
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\bin\Debug\net8.0\RayMinder.Api.staticwebassets.endpoints.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\spark\Downloads\RayMinder\FINAL\RayMinder\RayMinder.Api\obj\Debug\net8.0\RayMinde.19705B24.Up2Date

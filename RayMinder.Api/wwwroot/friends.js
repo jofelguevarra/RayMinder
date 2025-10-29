@@ -1,66 +1,58 @@
 const API_URL = "http://localhost:5007/api/friends";
 const username = localStorage.getItem("username");
 
-document.addEventListener("DOMContentLoaded", async () => {
-  if (!username) {
-    alert("You must be logged in first!");
-    window.location.href = "index.html";
-    return;
-  }
-
-  document.getElementById("user-info").innerText = `Logged in as: ${username}`;
-
-  document.getElementById("add-friend-btn").addEventListener("click", addFriend);
-
-  await loadFriends();
-});
+const messageDiv = document.getElementById("user-info");
+const friendInput = document.getElementById("friend-username");
+const friendsList = document.getElementById("friends-list");
+const addBtn = document.getElementById("add-friend-btn");
 
 async function loadFriends() {
-  const response = await fetch(`${API_URL}/${username}`);
-  if (!response.ok) {
-    console.error("Failed to load friends");
-    return;
-  }
+  try {
+    const response = await fetch(`${API_URL}/${username}`);
+    const friends = await response.json();
+    friendsList.innerHTML = "";
 
-  const friends = await response.json();
-  const list = document.getElementById("friends-list");
-  list.innerHTML = "";
+    if (friends.length === 0) {
+      friendsList.innerHTML = "<li>No friends yet.</li>";
+      return;
+    }
 
-  if (friends.length === 0) {
-    list.innerHTML = "<li>No friends yet.</li>";
-    return;
-  }
-
-  friends.forEach(friend => {
-    const li = document.createElement("li");
-    li.textContent = friend;
-    list.appendChild(li);
-  });
-}
-
-async function addFriend() {
-  const friendUsername = document.getElementById("friend-username").value.trim();
-  if (!friendUsername) {
-    alert("Please enter a username.");
-    return;
-  }
-
-  const response = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      username: username,
-      friendUsername: friendUsername
-    })
-  });
-
-  if (response.ok) {
-    alert("Friend added!");
-    document.getElementById("friend-username").value = "";
-    await loadFriends();
-  } else {
-    alert("Failed to add friend.");
+    friends.forEach(f => {
+      const li = document.createElement("li");
+      li.textContent = f.friendUsername;
+      friendsList.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error loading friends:", err);
   }
 }
+
+addBtn.addEventListener("click", async () => {
+  const friendUsername = friendInput.value.trim();
+  if (!friendUsername) return;
+
+  const data = { username, friendUsername };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      messageDiv.textContent = "Friend added!";
+      messageDiv.style.color = "green";
+      friendInput.value = "";
+      loadFriends();
+    } else {
+      const err = await response.json();
+      messageDiv.textContent = err.message || "Failed to add friend.";
+      messageDiv.style.color = "red";
+    }
+  } catch (err) {
+    console.error("Error adding friend:", err);
+  }
+});
+
+window.addEventListener("load", loadFriends);
