@@ -43,7 +43,7 @@ namespace RayMinder.Api.Controllers
                 return BadRequest(new { message = "You cannot add yourself." });
             }
 
-            // Prevent duplicates in either direction
+            // Prevent duplicates (either direction)
             var exists = _context.Friends.Any(f =>
                 (f.Username == friend.Username && f.FriendUsername == friend.FriendUsername) ||
                 (f.Username == friend.FriendUsername && f.FriendUsername == friend.Username));
@@ -59,9 +59,46 @@ namespace RayMinder.Api.Controllers
 
             _context.Friends.Add(friend1);
             _context.Friends.Add(friend2);
+
+            // Create a notification for the receiver
+            var notification = new FriendNotification
+            {
+                ReceiverUsername = friend.FriendUsername,
+                SenderUsername = friend.Username,
+                IsRead = false
+            };
+            _context.FriendNotifications.Add(notification);
+
             _context.SaveChanges();
 
             return Ok(new { message = "Friend added successfully!" });
+        }
+
+        // GET: api/friends/notifications/{username}
+        [HttpGet("notifications/{username}")]
+        public IActionResult GetNotifications(string username)
+        {
+            var notifications = _context.FriendNotifications
+                .Where(n => n.ReceiverUsername == username && !n.IsRead)
+                .Select(n => new { n.SenderUsername })
+                .ToList();
+
+            return Ok(notifications);
+        }
+
+        // POST: api/friends/notifications/mark-read/{username}
+        [HttpPost("notifications/mark-read/{username}")]
+        public IActionResult MarkAsRead(string username)
+        {
+            var notifications = _context.FriendNotifications
+                .Where(n => n.ReceiverUsername == username && !n.IsRead)
+                .ToList();
+
+            foreach (var n in notifications)
+                n.IsRead = true;
+
+            _context.SaveChanges();
+            return Ok(new { message = "Notifications marked as read." });
         }
     }
 }
