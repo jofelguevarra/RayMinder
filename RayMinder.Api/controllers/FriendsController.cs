@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RayMinder.Api.Models;
 using RayMinder.Api.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace RayMinder.Api.Controllers
@@ -22,7 +23,7 @@ namespace RayMinder.Api.Controllers
         {
             var friends = _context.Friends
                 .Where(f => f.Username == username)
-                .Select(f => f.FriendUsername)
+                .Select(f => new { friendUsername = f.FriendUsername })
                 .ToList();
 
             return Ok(friends);
@@ -34,21 +35,33 @@ namespace RayMinder.Api.Controllers
         {
             if (friend == null || string.IsNullOrEmpty(friend.Username) || string.IsNullOrEmpty(friend.FriendUsername))
             {
-                return BadRequest("Invalid data.");
+                return BadRequest(new { message = "Invalid data." });
             }
 
-            // Prevent duplicates
-            var exists = _context.Friends.Any(f => 
-                f.Username == friend.Username && f.FriendUsername == friend.FriendUsername);
+            if (friend.Username == friend.FriendUsername)
+            {
+                return BadRequest(new { message = "You cannot add yourself." });
+            }
+
+            // Prevent duplicates in either direction
+            var exists = _context.Friends.Any(f =>
+                (f.Username == friend.Username && f.FriendUsername == friend.FriendUsername) ||
+                (f.Username == friend.FriendUsername && f.FriendUsername == friend.Username));
+
             if (exists)
             {
-                return Conflict("Friend already added.");
+                return Conflict(new { message = "You are already friends." });
             }
 
-            _context.Friends.Add(friend);
+            // Add both directions
+            var friend1 = new Friend { Username = friend.Username, FriendUsername = friend.FriendUsername };
+            var friend2 = new Friend { Username = friend.FriendUsername, FriendUsername = friend.Username };
+
+            _context.Friends.Add(friend1);
+            _context.Friends.Add(friend2);
             _context.SaveChanges();
 
-            return Ok("Friend added successfully!");
+            return Ok(new { message = "Friend added successfully!" });
         }
     }
 }
