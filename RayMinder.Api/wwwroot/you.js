@@ -1,9 +1,14 @@
+console.log("Current you.js loaded");
+
 document.addEventListener('DOMContentLoaded', () => {
   const uvValue = document.getElementById('uv-value');
   const timerText = document.getElementById('timer-text');
   const timerBar = document.getElementById('timer-bar');
   const reapplyBtn = document.getElementById('reapply-btn');
   const alertMsg = document.getElementById('alert-message');
+  
+});
+
 
   let timerDuration = 20 * 60; // default 20 minutes
   let timeRemaining = timerDuration;
