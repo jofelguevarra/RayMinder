@@ -1,3 +1,5 @@
+console.log("friends.js loaded");
+
 const API_URL = "http://localhost:5007/api/friends";
 const username = localStorage.getItem("username");
 
