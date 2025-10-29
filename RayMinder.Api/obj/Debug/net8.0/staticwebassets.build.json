@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+z3oodkofbmB0rl3qnc5fBQHg+lFJ12/KziC+i7txh8=",
+  "Hash": "LrnDXDA7xBfknCWkDQJsb6fqHRxq3W+hyPbfU7SgZMo=",
   "Source": "RayMinder.Api",
   "BasePath": "_content/RayMinder.Api",
   "Mode": "Default",
@@ -8,19 +8,19 @@
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [
     {
-      "Name": "RayMinder.Api\\wwwroot",
+      "Name": "RayMinder.Api/wwwroot",
       "Source": "RayMinder.Api",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\index.html",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/index.html",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\index.html"
+      "OriginalItemSpec": "wwwroot/index.html"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\location.js",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/location.js",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "location.js",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\location.js"
+      "OriginalItemSpec": "wwwroot/location.js"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\register.html",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/register.html",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "register.html",
       "AssetKind": "All",
@@ -71,13 +71,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\register.html"
+      "OriginalItemSpec": "wwwroot/register.html"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\script.js",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/script.js",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "script.js",
       "AssetKind": "All",
@@ -90,13 +90,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\script.js"
+      "OriginalItemSpec": "wwwroot/script.js"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\style.css",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/style.css",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "style.css",
       "AssetKind": "All",
@@ -109,13 +109,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\style.css"
+      "OriginalItemSpec": "wwwroot/style.css"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\test.html",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/test.html",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "test.html",
       "AssetKind": "All",
@@ -128,13 +128,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\test.html"
+      "OriginalItemSpec": "wwwroot/test.html"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\you.html",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/you.html",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "you.html",
       "AssetKind": "All",
@@ -147,13 +147,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\you.html"
+      "OriginalItemSpec": "wwwroot/you.html"
     },
     {
-      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\you.js",
+      "Identity": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/you.js",
       "SourceId": "RayMinder.Api",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "ContentRoot": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/wwwroot/",
       "BasePath": "_content/RayMinder.Api",
       "RelativePath": "you.js",
       "AssetKind": "All",
@@ -166,7 +166,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\you.js"
+      "OriginalItemSpec": "wwwroot/you.js"
     }
   ]
 }
