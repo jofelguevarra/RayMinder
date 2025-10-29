@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+z3oodkofbmB0rl3qnc5fBQHg+lFJ12/KziC+i7txh8=",
+  "Hash": "T7rlMzsBSR5xDY4hlWdd3+zbp8niYFeJiWZHEzjQClc=",
   "Source": "RayMinder.Api",
   "BasePath": "_content/RayMinder.Api",
   "Mode": "Default",
@@ -16,6 +16,44 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\friends.html",
+      "SourceId": "RayMinder.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "BasePath": "_content/RayMinder.Api",
+      "RelativePath": "friends.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\friends.html"
+    },
+    {
+      "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\friends.js",
+      "SourceId": "RayMinder.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\",
+      "BasePath": "_content/RayMinder.Api",
+      "RelativePath": "friends.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\friends.js"
+    },
     {
       "Identity": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\index.html",
       "SourceId": "RayMinder.Api",

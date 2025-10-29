@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\friends.html",
+      "PackagePath": "staticwebassets\\friends.html"
+    },
+    {
+      "Id": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\friends.js",
+      "PackagePath": "staticwebassets\\friends.js"
+    },
+    {
       "Id": "C:\\Users\\spark\\Downloads\\RayMinder\\FINAL\\RayMinder\\RayMinder.Api\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
