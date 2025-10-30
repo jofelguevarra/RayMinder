@@ -105,14 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (message[0] == '1' && message.length <= 16) {
       // Time of last application
       timeOfLastApplication = message.substring(1);
-      console.log("Time of application:", timeOfLastApplication);
+      console.log("Time of last application:", timeOfLastApplication, "seconds ago");
 
     } else if (message[0] == '2' && message.length <= 16) {
       // Time to next application
       timeToNextApplication = message.substring(1);
-      console.log("Time to next application:", timeToNextApplication);
+      console.log("Time to next application:", timeToNextApplication, "seconds");
       // TODO: Update timer based on this value
 
+      if (!isNaN(timeToNextApplication) && timeToNextApplication > 0) {
+        console.log("Setting timer from ESP:", timeToNextApplication, "seconds");
+        clearInterval(timerInterval);
+        timerDuration = timeToNextApplication;
+        timeRemaining = timerDuration;
+        updateTimerDisplay();
+        startTimer();
+      }
     } else if (message[0] == '3' && message.length == 4) {
       // Facing direction
       let degreeFacing = parseInt(message.slice(1, 4));
