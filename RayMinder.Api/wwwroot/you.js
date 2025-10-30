@@ -1,3 +1,5 @@
+import { bleConnectionInstance } from './BLEConnection.js';
+
 console.log("Current you.js loaded");
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -67,37 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  let bleDevice;
-  let bleCharacteristic;
-
   document.getElementById('connectBtn').addEventListener('click', async () => {
-    await connectBLE();
+    await bleConnectionInstance.connectBLE();
   });
 
-  async function connectBLE() {
-    try {
-      bleDevice = await navigator.bluetooth.requestDevice({
-        filters: [{ name: 'ESP32-C3' }],
-        optionalServices: ['12345678-1234-1234-1234-123456789012']
-      });
-
-      const server = await bleDevice.gatt.connect();
-      const service = await server.getPrimaryService('12345678-1234-1234-1234-123456789012');
-      bleCharacteristic = await service.getCharacteristic('12341234-1234-1234-1234-123412341234');
-
-      // Add listener for incoming messages from ESP32
-      await bleCharacteristic.startNotifications();
-      bleCharacteristic.addEventListener('characteristicvaluechanged', readMessageFromESP);
-
-      console.log("Connected to ESP32 BLE!");
-      console.log(bleCharacteristic);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  function readMessageFromESP(e) {
-    const message = new TextDecoder().decode(e.target.value);
+  bleConnectionInstance.onMessage((message) => {
     console.log("Received message: " + message);
 
     // Starting with 0 -> new UV index
@@ -133,11 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // 3XXX
     } else if (message[0] == '3' && message.length == 4) {
       let degreeFacing = parseInt(message.slice(1, 4));
+      bleConnectionInstance.facingDirection = degreeFacing;
       console.log("Degree facing: " + degreeFacing);
     }
 
     return message;
-  }
+  });
 
   async function triggerAlert() {
     alertMsg.textContent = "Time to reapply sunscreen!";
@@ -149,20 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
     //  1: Stands for "reapply sunscreen"
     //   XX: 2 digit SPF (e.g. 05, 15, 50)
     //     X: Skin type (1-6)
-    let message = ""; // TODO: Add correct message
+    let message = "test"; // TODO: Add correct message
 
     // Send a message to the ESP32
-    if (bleCharacteristic) {
-      console.log("Sending message " + message);
-      await bleCharacteristic.writeValue(new TextEncoder().encode(message));
-    } else {
-      console.log("BLE not connected yet!");
-    }
+    await bleConnectionInstance.sendMessage(message);
   }
 
   reapplyBtn.addEventListener('click', () => {
     alertMsg.textContent = '';
-    fetchUV();
+    // fetchUV();
     startTimer();
     triggerAlert();
   });
@@ -178,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Start processes ---
-  fetchUV();
+  // fetchUV();
   startTimer();
-  setInterval(fetchUV, 30000);
+  // setInterval(fetchUV, 30000);
 });

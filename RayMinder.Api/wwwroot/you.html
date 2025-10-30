@@ -216,7 +216,7 @@
 
   <div id="alert-message"></div>
 
-  <script src="you.js"></script>
+  <script type="module" src="you.js"></script>
   <script src="location.js"></script>
 
   <script>
@@ -227,7 +227,7 @@
     // Load notifications
     async function loadNotifications(username) {
       try {
-        const response = await fetch(`http://localhost:5185/api/friendnotifications/${username}`);
+        const response = await fetch(`http://localhost:5007/api/friendnotifications/${username}`);
         if (!response.ok) return;
 
         const notifications = await response.json();
@@ -290,7 +290,7 @@
       if (!username) return;
 
       try {
-        const response = await fetch(`http://localhost:5185/api/friendnotifications/markallread/${username}`, {
+        const response = await fetch(`http://localhost:5007/api/friendnotifications/markallread/${username}`, {
           method: 'PUT'
         });
 
