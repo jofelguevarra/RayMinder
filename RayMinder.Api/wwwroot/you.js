@@ -186,14 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  //Logout
-  if (logoutBtn) {
-   logoutBtn.addEventListener('click', () => {
-    localStorage.clear();
-    window.location.href = "index.html"; // back to login page
-  });
-}
-
   // --- Start processes ---
   // fetchUV();
   startTimer();
