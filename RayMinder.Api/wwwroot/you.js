@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const reapplyBtn = document.getElementById('reapply-btn');
   const alertMsg = document.getElementById('alert-message');
   const friendsTab = document.getElementById('friendsTab');
+  const spfSelect = document.getElementById('spfSelect');
+  const skinSelect = document.getElementById('skinSelect');
 
   // --- Timer setup ---
   let timerDuration = 20 * 60;
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeOfLastApplication = null;
   let timeToNextApplication = null;
 
+  // Display UV
   function updateUVDisplay(index) {
     uvValue.textContent = index;
     const circle = document.getElementById('uv-circle');
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     circle.style.boxShadow = `0 0 ${30 + index * 2}px rgba(255, 235, 59, ${brightness})`;
   }
 
+  // Adjust timer based on UV intensity
   function adjustTimerBasedOnUV(index) {
     if (index <= 3) timerDuration = 30 * 60;
     else if (index <= 6) timerDuration = 20 * 60;
@@ -36,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else timerDuration = 10 * 60;
   }
 
+  // Timer logic
   function startTimer() {
     clearInterval(timerInterval);
     timeRemaining = timerDuration;
@@ -52,10 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
+  // Update timer bar and display
   function updateTimerDisplay() {
-    const minutes = Math.floor(timeRemaining / 60);
+    const hours = Math.floor(timeRemaining / 3600);
+    const minutes = Math.floor((timeRemaining % 3600) / 60);
     const seconds = timeRemaining % 60;
-    timerText.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    
+    const timeString =
+      (hours > 0 ? hours + ":" : "") +
+      `${minutes < 10 ? '0' : ''}${minutes}` +
+      `${seconds < 10 ? '0' : ''}${seconds}`;
+
+    timerText.textContent = timeString;
+
     const percentage = (timeRemaining / timerDuration) * 100;
     timerBar.style.width = `${percentage}%`;
 
@@ -69,15 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // --- BLE Communication ---
   document.getElementById('connectBtn').addEventListener('click', async () => {
     await bleConnectionInstance.connectBLE();
   });
 
+  // Handle incoming BLE messages
   bleConnectionInstance.onMessage((message) => {
     console.log("Received message: " + message);
 
     // Starting with 0 -> new UV index
-    // 0XX
     if (message[0] == '0' && message.length == 3) {
       if (message[1] == '0')
         uvIndex = message[2];
@@ -116,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return message;
   });
 
+  // When timer finishes
   async function triggerAlert() {
     alertMsg.textContent = "Time to reapply sunscreen!";
     alert("Time to reapply sunscreen!");
@@ -126,20 +142,41 @@ document.addEventListener('DOMContentLoaded', () => {
     //  1: Stands for "reapply sunscreen"
     //   XX: 2 digit SPF (e.g. 05, 15, 50)
     //     X: Skin type (1-6)
-    let message = "test"; // TODO: Add correct message
+    const spfValue = spfSelect.value.padStart(2, '0');
+    const skinValue = skinSelect.value;
+    const message = `1${spfValue}${skinValue}`;
 
     // Send a message to the ESP32
+    console.log("Sending alert message to ESP", message);
     await bleConnectionInstance.sendMessage(message);
   }
 
+  // I reapplied button
   reapplyBtn.addEventListener('click', () => {
     alertMsg.textContent = '';
+    clearInterval(timerInterval);
+
+    // Reset timer to full duration again
+    timeRemaining = timerDuration;
+    updateTimerDisplay();
+    startTimer();
+
     // fetchUV();
     startTimer();
     triggerAlert();
   });
 
-  // --- Safe redirect to friends page ---
+  // Inform ESP that the user reapplied sunscreen
+  const spfValue = spfSelect.value.padStart(2, '0');
+  const skinValue = skinSelect.value;
+  const message = `1${spfValue}${skinValue}`;
+  console.log("Manual reapply message", message);
+
+  await bleConnectionInstance.sendMessage(message);
+
+});
+
+  // Safe redirect to friends page
   if (friendsTab) {
     friendsTab.addEventListener('click', (event) => {
       event.preventDefault();
