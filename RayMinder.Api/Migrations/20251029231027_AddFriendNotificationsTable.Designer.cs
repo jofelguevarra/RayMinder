@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RayMinder.Api.Data;
 
@@ -10,9 +11,11 @@ using RayMinder.Api.Data;
 namespace RayMinder.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029231027_AddFriendNotificationsTable")]
+    partial class AddFriendNotificationsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -42,17 +45,14 @@ namespace RayMinder.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("ReceiverUsername")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("SenderUsername")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

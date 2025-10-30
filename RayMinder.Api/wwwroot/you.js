@@ -1,11 +1,18 @@
+console.log("Current you.js loaded");
+
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM loaded, initializing You page...");
+
+  // --- Element references ---
   const uvValue = document.getElementById('uv-value');
   const timerText = document.getElementById('timer-text');
   const timerBar = document.getElementById('timer-bar');
   const reapplyBtn = document.getElementById('reapply-btn');
   const alertMsg = document.getElementById('alert-message');
+  const friendsTab = document.getElementById('friendsTab');
 
-  let timerDuration = 20 * 60; // default 20 minutes
+  // --- Timer setup ---
+  let timerDuration = 20 * 60;
   let timeRemaining = timerDuration;
   let timerInterval;
   let uvIndex = 5;
@@ -47,16 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
     timerText.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
     const percentage = (timeRemaining / timerDuration) * 100;
     timerBar.style.width = `${percentage}%`;
 
     if (percentage <= 20) {
       timerBar.style.backgroundColor = '#f44336';
-      timerText.style.color = '#fff';
     } else if (percentage <= 50) {
       timerBar.style.backgroundColor = '#ff9800';
-      timerText.style.color = '#fff';
     } else {
       timerBar.style.backgroundColor = '#4caf50';
       timerText.style.color = '#fff';
@@ -163,11 +167,18 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerAlert();
   });
 
+  // --- Safe redirect to friends page ---
+  if (friendsTab) {
+    friendsTab.addEventListener('click', (event) => {
+      event.preventDefault();
+      console.log("Navigating to friends.html");
+      window.alert = () => {}; // disables “coming soon” alerts if any
+      window.location.href = "friends.html";
+    });
+  }
+
+  // --- Start processes ---
   fetchUV();
   startTimer();
   setInterval(fetchUV, 30000);
-
-  document.getElementById('friendsTab').addEventListener('click', () => {
-    alert("Friends page coming soon!");
-  });
 });

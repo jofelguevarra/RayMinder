@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RayMinder.Api.Data;
 
@@ -10,9 +11,11 @@ using RayMinder.Api.Data;
 namespace RayMinder.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029204257_AddFriendsTable")]
+    partial class AddFriendsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -34,31 +37,6 @@ namespace RayMinder.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Friends");
-                });
-
-            modelBuilder.Entity("RayMinder.Api.Models.FriendNotification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FriendNotifications");
                 });
 
             modelBuilder.Entity("RayMinder.Api.Models.Location", b =>

@@ -24,6 +24,56 @@
       font-size: 2.2em;
       letter-spacing: 1px;
       margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    /* Notification container */
+    #notification-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    #notification-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    #notification-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      display: none;
+    }
+
+    #notification-list {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 30px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 250px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      text-align: left;
+    }
+
+    #notification-list div {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
     }
 
     .nav-tabs {
@@ -66,7 +116,6 @@
       text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
     }
 
-    /* Timer bar container */
     #timer-container {
       width: 80%;
       max-width: 400px;
@@ -79,7 +128,6 @@
       box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     }
 
-    /* The bar that shrinks */
     #timer-bar {
       height: 100%;
       width: 100%;
@@ -92,7 +140,6 @@
       box-sizing: border-box;
     }
 
-    /* Timer text inside bar */
     #timer-text {
       position: absolute;
       left: 50%;
@@ -128,7 +175,29 @@
   </style>
 </head>
 <body>
-  <h1>RayMinder</h1>
+  <h1>
+    RayMinder
+    <!-- Notification bell -->
+    <div id="notification-container">
+      <button id="notification-btn">🔔</button>
+      <span id="notification-count">0</span>
+      <div id="notification-list">
+        <button id="mark-all-read-btn" style="
+          width: 100%;
+          background: #ff9800;
+          color: white;
+          border: none;
+          padding: 8px;
+          border-radius: 8px 8px 0 0;
+          cursor: pointer;
+        ">
+          Mark all as read
+        </button>
+        <div id="notifications-content"></div>
+      </div>
+    </div>
+  </h1>
+
   <div class="nav-tabs">
     <span class="active">You</span> | <span id="friendsTab">Friends</span>
   </div>
@@ -150,5 +219,91 @@
   <script src="you.js"></script>
   <script src="location.js"></script>
 
+  <script>
+    document.getElementById("friendsTab").addEventListener("click", () => {
+      window.location.href = "friends.html";
+    });
+
+    // Load notifications
+    async function loadNotifications(username) {
+      try {
+        const response = await fetch(`http://localhost:5185/api/friendnotifications/${username}`);
+        if (!response.ok) return;
+
+        const notifications = await response.json();
+        const container = document.getElementById('notifications-content');
+        const count = document.getElementById('notification-count');
+
+        container.innerHTML = '';
+        const unread = notifications.filter(n => !n.isRead);
+        count.style.display = unread.length > 0 ? 'block' : 'none';
+        count.textContent = unread.length;
+
+        if (notifications.length === 0) {
+          container.innerHTML = `<div style="padding: 10px; text-align: center; color: gray;">No notifications</div>`;
+          return;
+        }
+
+        notifications.forEach(n => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <div style="background:${n.isRead ? '#f9f9f9' : '#fffde7'};">
+              <strong>${n.message}</strong><br>
+              <small style="color:gray;">${new Date(n.createdAt).toLocaleString()}</small>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+      } catch (err) {
+        console.error('Error loading notifications:', err);
+      }
+    }
+
+    // Toggle and auto-refresh
+    document.addEventListener('DOMContentLoaded', () => {
+      const username = localStorage.getItem('username') || 'testuser'; // replace with actual logged-in username
+      if (username) loadNotifications(username);
+
+      const bell = document.getElementById('notification-btn');
+      const list = document.getElementById('notification-list');
+
+      bell.addEventListener('click', () => {
+        list.style.display = list.style.display === 'block' ? 'none' : 'block';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!document.getElementById('notification-container').contains(e.target)) {
+          list.style.display = 'none';
+        }
+      });
+
+      // Auto-refresh every 15 seconds
+      setInterval(() => {
+        if (username) loadNotifications(username);
+      }, 15000);
+    });
+
+    // Handle "Mark all as read" button
+    document.getElementById('mark-all-read-btn').addEventListener('click', async () => {
+      const username = localStorage.getItem('username') || 'testuser';
+      if (!username) return;
+
+      try {
+        const response = await fetch(`http://localhost:5185/api/friendnotifications/markallread/${username}`, {
+          method: 'PUT'
+        });
+
+        if (response.ok) {
+          console.log("All notifications marked as read");
+          loadNotifications(username);
+        } else {
+          console.error("Failed to mark notifications as read");
+        }
+      } catch (err) {
+        console.error('Error marking all as read:', err);
+      }
+    });
+  </script>
 </body>
 </html>
