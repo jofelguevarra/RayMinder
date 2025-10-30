@@ -46,5 +46,20 @@ namespace RayMinder.Api.Controllers
             var locations = _context.Locations.ToList();
             return Ok(locations);
         }
+
+        // Get location of specific user
+        [HttpGet("{username}")]
+        public IActionResult GetLocationFromUsername(String username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest(new { message = "Username is required" });
+
+            var userLocation = _context.Locations.FirstOrDefault(l => l.Username == username);
+
+            if (userLocation == null)
+                return NotFound(new { message = $"No location found for user '{username}'" });
+
+            return Ok(userLocation);
+        }
     }
 }
