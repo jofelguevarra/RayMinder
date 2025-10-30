@@ -9,7 +9,7 @@ const username = localStorage.getItem("username");
 // Function to send location data to backend
 async function sendLocationToServer(latitude, longitude) {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(API_URL + '/update', {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
