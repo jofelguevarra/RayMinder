@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const timeString =
       (hours > 0 ? hours + ":" : "") +
-      `${minutes < 10 ? '0' : ''}${minutes}` +
+      `${minutes < 10 ? '0' : ''}${minutes}`; +
       `${seconds < 10 ? '0' : ''}${seconds}`;
 
     timerText.textContent = timeString;
@@ -75,9 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (percentage <= 20) {
       timerBar.style.backgroundColor = '#f44336';
-    } else if (percentage <= 50) {
-      timerBar.style.backgroundColor = '#ff9800';
-    } else {
+    } else if (percentage <= 50) timerBar.style.backgroundColor = '#ff9800';
+    else {
       timerBar.style.backgroundColor = '#4caf50';
       timerText.style.color = '#fff';
     }
@@ -94,38 +93,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Starting with 0 -> new UV index
     if (message[0] == '0' && message.length == 3) {
-      if (message[1] == '0')
-        uvIndex = message[2];
-      else
-        uvIndex = message.substring(1, message.length);
-
+      // New UV index
+      uvIndex = message[1] == '0' ? message[2] : message.substring(1);
       updateUVDisplay(uvIndex);
       adjustTimerBasedOnUV(uvIndex);
+      console.log("New UV index:", uvIndex);
 
-      console.log("New UV index: " + uvIndex);
-
-      // Starting with 1 -> time of application
-      // 1XXXXX... -> up to 15 characters for time
     } else if (message[0] == '1' && message.length <= 16) {
-      timeOfLastApplication = message.substring(1, message.length);
+      // Time of last application
+      timeOfLastApplication = message.substring(1);
+      console.log("Time of application:", timeOfLastApplication);
 
-      console.log("Time of application: " + timeOfLastApplication);
-
-      // Starting with 2 -> time till next application
-      // 2XXXXX... -> up to 15 characters for time
     } else if (message[0] == '2' && message.length <= 16) {
-      timeToNextApplication = message.substring(1, message.length);
+      // Time to next application
+      timeToNextApplication = message.substring(1);
+      console.log("Time to next application:", timeToNextApplication);
+      // TODO: Update timer based on this value
 
-      console.log("Time to next application: " + timeToNextApplication);
-
-      // TODO: Update timer based on this value + calculate percentage for timer bar
-
-      // Starting with 3 -> Facing direction
-      // 3XXX
     } else if (message[0] == '3' && message.length == 4) {
+      // Facing direction
       let degreeFacing = parseInt(message.slice(1, 4));
       bleConnectionInstance.facingDirection = degreeFacing;
-      console.log("Degree facing: " + degreeFacing);
+      console.log("Degree facing:", degreeFacing);
     }
 
     return message;
@@ -152,29 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // I reapplied button
-  reapplyBtn.addEventListener('click', () => {
+  reapplyBtn.addEventListener('click', async () => {
     alertMsg.textContent = '';
     clearInterval(timerInterval);
-
-    // Reset timer to full duration again
     timeRemaining = timerDuration;
     updateTimerDisplay();
     startTimer();
 
-    // fetchUV();
-    startTimer();
-    triggerAlert();
+    const spfValue = spfSelect.value.padStart(2, '0');
+    const skinValue = skinSelect.value;
+    const message = `1${spfValue}${skinValue}`;
+    console.log("Manual reapply message:", message);
+    await bleConnectionInstance.sendMessage(message);
   });
-
-  // Inform ESP that the user reapplied sunscreen
-  const spfValue = spfSelect.value.padStart(2, '0');
-  const skinValue = skinSelect.value;
-  const message = `1${spfValue}${skinValue}`;
-  console.log("Manual reapply message", message);
-
-  await bleConnectionInstance.sendMessage(message);
-
-});
 
   // Safe redirect to friends page
   if (friendsTab) {
