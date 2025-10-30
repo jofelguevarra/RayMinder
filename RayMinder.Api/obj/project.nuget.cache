@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "92N535ZaU3A=",
+  "dgSpecHash": "hANNkaKI+Zw=",
   "success": true,
   "projectFilePath": "/Users/annika/Documents/Uni/GSD/Auslandssemester/UniSC/Courses/ResponsiveDesignAndTechnology/Task3/RayMinder/RayMinder.Api/RayMinder.Api.csproj",
   "expectedPackageFiles": [
@@ -59,7 +59,10 @@
     "/Users/annika/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "/Users/annika/.nuget/packages/system.text.encodings.web/9.0.10/system.text.encodings.web.9.0.10.nupkg.sha512",
     "/Users/annika/.nuget/packages/system.text.json/9.0.10/system.text.json.9.0.10.nupkg.sha512",
-    "/Users/annika/.nuget/packages/system.threading.channels/7.0.0/system.threading.channels.7.0.0.nupkg.sha512"
+    "/Users/annika/.nuget/packages/system.threading.channels/7.0.0/system.threading.channels.7.0.0.nupkg.sha512",
+    "/Users/annika/.nuget/packages/microsoft.netcore.app.ref/8.0.18/microsoft.netcore.app.ref.8.0.18.nupkg.sha512",
+    "/Users/annika/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.18/microsoft.aspnetcore.app.ref.8.0.18.nupkg.sha512",
+    "/Users/annika/.nuget/packages/microsoft.netcore.app.host.osx-arm64/8.0.18/microsoft.netcore.app.host.osx-arm64.8.0.18.nupkg.sha512"
   ],
   "logs": []
 }
