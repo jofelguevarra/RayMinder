@@ -84,10 +84,6 @@ document.getElementById('testLocation').addEventListener('click', async () => {
   await sendFriendNotification(friend);
 });
 
-// TODO: Call this function when a friend has to reapply sunscreen
-// Send Message to ESP32 with the buzzer(s) that should go off in the direction of the friend that needs to reapply sunscreen
-
-
 async function sendFriendNotification(friendUsername) {
   try {
     // Get location of user + friend
@@ -147,7 +143,7 @@ function toRad(deg) {
 }
 
 function toDeg(rad) {
-  rad * 180 / Math.PI;
+  return rad * 180 / Math.PI;
 }
 
 
@@ -174,3 +170,5 @@ async function getLocation(user) {
 }
 
 window.addEventListener("load", loadFriends);
+
+export { sendFriendNotification };

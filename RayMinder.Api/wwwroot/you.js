@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const friendsTab = document.getElementById('friendsTab');
   const spfSelect = document.getElementById('spfSelect');
   const skinSelect = document.getElementById('skinSelect');
+  const logoutBtn = document.getElementById('logout-btn');
 
   // --- Timer setup ---
   let timerDuration = 20 * 60;
@@ -184,6 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = "friends.html";
     });
   }
+
+  //Logout
+  if (logoutBtn) {
+   logoutBtn.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = "index.html"; // back to login page
+  });
+}
 
   // --- Start processes ---
   // fetchUV();
