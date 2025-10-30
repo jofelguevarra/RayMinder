@@ -181,7 +181,20 @@
     <div id="notification-container">
       <button id="notification-btn">🔔</button>
       <span id="notification-count">0</span>
-      <div id="notification-list"></div>
+      <div id="notification-list">
+        <button id="mark-all-read-btn" style="
+          width: 100%;
+          background: #ff9800;
+          color: white;
+          border: none;
+          padding: 8px;
+          border-radius: 8px 8px 0 0;
+          cursor: pointer;
+        ">
+          Mark all as read
+        </button>
+        <div id="notifications-content"></div>
+      </div>
     </div>
   </h1>
 
@@ -217,16 +230,16 @@
         if (!response.ok) return;
 
         const notifications = await response.json();
-        const list = document.getElementById('notification-list');
+        const container = document.getElementById('notifications-content');
         const count = document.getElementById('notification-count');
 
-        list.innerHTML = '';
+        container.innerHTML = '';
         const unread = notifications.filter(n => !n.isRead);
         count.style.display = unread.length > 0 ? 'block' : 'none';
         count.textContent = unread.length;
 
         if (notifications.length === 0) {
-          list.innerHTML = `<div style="padding: 10px; text-align: center; color: gray;">No notifications</div>`;
+          container.innerHTML = `<div style="padding: 10px; text-align: center; color: gray;">No notifications</div>`;
           return;
         }
 
@@ -238,7 +251,7 @@
               <small style="color:gray;">${new Date(n.createdAt).toLocaleString()}</small>
             </div>
           `;
-          list.appendChild(div);
+          container.appendChild(div);
         });
 
       } catch (err) {
@@ -268,6 +281,27 @@
       setInterval(() => {
         if (username) loadNotifications(username);
       }, 15000);
+    });
+
+    // Handle "Mark all as read" button
+    document.getElementById('mark-all-read-btn').addEventListener('click', async () => {
+      const username = localStorage.getItem('username') || 'testuser';
+      if (!username) return;
+
+      try {
+        const response = await fetch(`http://localhost:5185/api/friendnotifications/markallread/${username}`, {
+          method: 'PUT'
+        });
+
+        if (response.ok) {
+          console.log("All notifications marked as read");
+          loadNotifications(username);
+        } else {
+          console.error("Failed to mark notifications as read");
+        }
+      } catch (err) {
+        console.error('Error marking all as read:', err);
+      }
     });
   </script>
 </body>
