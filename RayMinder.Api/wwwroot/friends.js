@@ -10,6 +10,7 @@ const friendInput = document.getElementById("friend-username");
 const friendsList = document.getElementById("friends-list");
 const addBtn = document.getElementById("add-friend-btn");
 
+// Load friends list from API
 async function loadFriends() {
   try {
     const response = await fetch(`${API_URL}/${username}`);
@@ -28,12 +29,22 @@ async function loadFriends() {
     });
   } catch (err) {
     console.error("Error loading friends:", err);
+    showMessage ("Error loading your friends list", "red");
   }
 }
 
+// Add a friend
 addBtn.addEventListener("click", async () => {
   const friendUsername = friendInput.value.trim();
-  if (!friendUsername) return;
+  if (!friendUsername) {
+    showMessage("Please enter a friend's username.", "red");
+    return;
+  }
+
+  if (!username) {
+    showMessage("You must be logged in to add friends.", "red");
+    return;
+  }
 
   const data = { username, friendUsername };
 
@@ -44,22 +55,30 @@ addBtn.addEventListener("click", async () => {
       body: JSON.stringify(data),
     });
 
+    const result = await response.json();
+
     if (response.ok) {
-      messageDiv.textContent = "Friend added!";
-      messageDiv.style.color = "green";
+      showMessage(result.message || "Friend added successfully!", "green");
       friendInput.value = "";
-      loadFriends();
+      await loadFriends();
     } else {
-      const err = await response.json();
-      messageDiv.textContent = err.message || "Failed to add friend.";
-      messageDiv.style.color = "red";
+      showMessage(result.message || "Failed to add friend.", "red");
     }
   } catch (err) {
     console.error("Error adding friend:", err);
+    showMessage("⚠️ Server connection error.", "red");
   }
 });
 
-// TODO: Remove this button after it was implemented that the message is automatically sent + move content
+// Show status message
+function showMessage(text, color) {
+  messageDiv.textContent = text;
+  messageDiv.style.color = color;
+  messageDiv.style.fontWeight = "bold";
+  messageDiv.style.marginTop = "8px";
+}
+
+// Notify friends 
 document.getElementById('testLocation').addEventListener('click', async () => {
   let friend = "testuser"; // TODO: Replace with actual friend username
   await sendFriendNotification(friend);
@@ -67,6 +86,8 @@ document.getElementById('testLocation').addEventListener('click', async () => {
 
 // TODO: Call this function when a friend has to reapply sunscreen
 // Send Message to ESP32 with the buzzer(s) that should go off in the direction of the friend that needs to reapply sunscreen
+
+
 async function sendFriendNotification(friendUsername) {
   try {
     // Get location of user + friend

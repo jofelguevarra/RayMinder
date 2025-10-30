@@ -1,4 +1,5 @@
 import { bleConnectionInstance } from './BLEConnection.js';
+import { sendFriendNotification } from './friends.js';
 
 console.log("Current you.js loaded");
 
@@ -59,28 +60,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update timer bar and display
   function updateTimerDisplay() {
-    const hours = Math.floor(timeRemaining / 3600);
-    const minutes = Math.floor((timeRemaining % 3600) / 60);
-    const seconds = timeRemaining % 60;
-    
-    const timeString =
-      (hours > 0 ? hours + ":" : "") +
-      `${minutes < 10 ? '0' : ''}${minutes}`; +
-      `${seconds < 10 ? '0' : ''}${seconds}`;
+  const hours = Math.floor(timeRemaining / 3600);
+  const minutes = Math.floor((timeRemaining % 3600) / 60);
+  const seconds = timeRemaining % 60;
 
-    timerText.textContent = timeString;
+  const timeString =
+    `${hours < 10 ? '0' : ''}${hours}:` +
+    `${minutes < 10 ? '0' : ''}${minutes}:` +
+    `${seconds < 10 ? '0' : ''}${seconds}`;
 
-    const percentage = (timeRemaining / timerDuration) * 100;
-    timerBar.style.width = `${percentage}%`;
+  timerText.textContent = timeString;
 
-    if (percentage <= 20) {
-      timerBar.style.backgroundColor = '#f44336';
-    } else if (percentage <= 50) timerBar.style.backgroundColor = '#ff9800';
-    else {
-      timerBar.style.backgroundColor = '#4caf50';
-      timerText.style.color = '#fff';
-    }
+  const percentage = (timeRemaining / timerDuration) * 100;
+  timerBar.style.width = `${percentage}%`;
+
+  if (percentage <= 20) {
+    timerBar.style.backgroundColor = '#f44336';
+  } else if (percentage <= 50) {
+    timerBar.style.backgroundColor = '#ff9800';
+  } else {
+    timerBar.style.backgroundColor = '#4caf50';
+    timerText.style.color = '#fff';
   }
+}
 
   // --- BLE Communication ---
   document.getElementById('connectBtn').addEventListener('click', async () => {
@@ -138,7 +140,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Send a message to the ESP32
     console.log("Sending alert message to ESP", message);
     await bleConnectionInstance.sendMessage(message);
+    await notifyFriendsToBuzz();
   }
+
+  async function notifyFriendsToBuzz() {
+  try {
+    const username = localStorage.getItem("username");
+    const API_URL = "http://localhost:5007/api/friends";
+    const response = await fetch(`${API_URL}/${username}`);
+    if (!response.ok) return;
+
+    const friends = await response.json();
+    for (const f of friends) {
+      console.log(`Notifying ${f.friendUsername} to reapply`);
+      await sendFriendNotification(f.friendUsername);
+    }
+  } catch (err) {
+    console.error("Error notifying friends:", err);
+  }
+}
 
   // I reapplied button
   reapplyBtn.addEventListener('click', async () => {
