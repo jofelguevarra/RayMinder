@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Friend - RayMinder</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .friend-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .direction {
+      font-weight: bold;
+      font-size: 1.4em;
+      color: #333;
+    }
+    .small {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .actions button {
+      margin: 6px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-remind { background: #4caf50; color: #fff; }
+    .btn-find { background: #2196f3; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button onclick="window.location.href='friends.html'">← Back</button>
+    <h1 id="friend-name">Friend</h1>
+
+    <div class="friend-card">
+      <div class="direction" id="friend-direction">Direction: —</div>
+      <div class="small" id="friend-distance">Distance: —</div>
+
+      <div class="actions">
+        <button id="remindFriend" class="btn-remind">Remind Friend</button>
+        <button id="findFriend" class="btn-find">Find Friend (buzz)</button>
+      </div>
+
+      <div id="status" style="margin-top:8px;font-weight:bold;"></div>
+    </div>
+  </div>
+
+  <script type="module" src="friend-dashboard.js"></script>
+</body>
+</html>

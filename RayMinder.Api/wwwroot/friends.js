@@ -9,24 +9,73 @@ const messageDiv = document.getElementById("user-info");
 const friendInput = document.getElementById("friend-username");
 const friendsList = document.getElementById("friends-list");
 const addBtn = document.getElementById("add-friend-btn");
+const friendsStatus = document.getElementById("friends-status");
+
+// Helper to show status messages on the page
+function showMessage(text, color = 'black') {
+  if (friendsStatus) {
+    friendsStatus.textContent = text;
+    friendsStatus.style.color = color;
+    setTimeout(() => { friendsStatus.textContent = ''; }, 3500);
+  }
+}
 
 // Load friends list from API
 async function loadFriends() {
   try {
-    const response = await fetch(`${API_URL}/${username}`);
+    if (!username) {
+      showMessage("Not logged in.", "red");
+      return;
+    }
+    const response = await fetch(`${API_URL}/${encodeURIComponent(username)}`);
+    if (!response.ok) {
+      showMessage("Failed to load friends.", "red");
+      return;
+    }
+
     const friends = await response.json();
     friendsList.innerHTML = "";
 
-    if (friends.length === 0) {
+    if (!friends || friends.length === 0) {
       friendsList.innerHTML = "<li>No friends yet.</li>";
       return;
     }
 
     friends.forEach(f => {
       const li = document.createElement("li");
-      li.textContent = f.friendUsername;
+      li.innerHTML = `
+        <span class="friend-name">${f.friendUsername}</span>
+        <span class="friend-actions">
+          <button class="btn-open" data-user="${f.friendUsername}">Open</button>
+          <button class="btn-remind" data-user="${f.friendUsername}">Remind</button>
+        </span>
+      `;
       friendsList.appendChild(li);
     });
+
+    // attach event listeners (delegation)
+    friendsList.querySelectorAll('.btn-open').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const friend = e.currentTarget.dataset.user;
+        // open friend-dashboard with query param
+        window.location.href = `friend-dashboard.html?username=${encodeURIComponent(friend)}`;
+      });
+    });
+
+    friendsList.querySelectorAll('.btn-remind').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const friend = e.currentTarget.dataset.user;
+        showMessage(`Sending reminder to ${friend}...`, 'orange');
+        const res = await sendFriendNotification(friend);
+        if (res === null) {
+          showMessage(`Reminder sent to ${friend}.`, 'green');
+        } else {
+          showMessage(`Failed to remind ${friend}.`, 'red');
+          console.error(res);
+        }
+      });
+    });
+
   } catch (err) {
     console.error("Error loading friends:", err);
     showMessage ("Error loading your friends list", "red");
@@ -40,7 +89,6 @@ addBtn.addEventListener("click", async () => {
     showMessage("Please enter a friend's username.", "red");
     return;
   }
-
   if (!username) {
     showMessage("You must be logged in to add friends.", "red");
     return;
@@ -70,20 +118,13 @@ addBtn.addEventListener("click", async () => {
   }
 });
 
-// Show status message
-function showMessage(text, color) {
-  messageDiv.textContent = text;
-  messageDiv.style.color = color;
-  messageDiv.style.fontWeight = "bold";
-  messageDiv.style.marginTop = "8px";
-}
-
-// Notify friends 
+// TEST button
 document.getElementById('testLocation').addEventListener('click', async () => {
-  let friend = "testuser"; // TODO: Replace with actual friend username
+  let friend = "testuser"; // TODO: Replace with actual friend username if desired
   await sendFriendNotification(friend);
 });
 
+// Send friend notification
 async function sendFriendNotification(friendUsername) {
   try {
     // Get location of user + friend
@@ -92,30 +133,30 @@ async function sendFriendNotification(friendUsername) {
 
     if (!userLocation) {
       console.error(`No location found for current user '${username}'`);
-      return null;
+      return new Error('missing user location');
     }
 
     if (!friendLocation) {
       console.error(`No location found for friend '${friendUsername}'`);
-      return null;
+      return new Error('missing friend location');
     }
 
     // Get Bearing / Degree to the friend and rotate it by the RayMinder rotation
-    let rotation = bleConnectionInstance.facingDirection;
+    let rotation = bleConnectionInstance.facingDirection || 0;
     let totalFacingDirection = getBearing(userLocation.latitude, userLocation.longitude, friendLocation.latitude, friendLocation.longitude);
     totalFacingDirection = (totalFacingDirection + rotation) % 360; // Rotate to fit the facing direction
 
     // Get buzzer(s) that should go off
     let buzzer = getDirectionCode(totalFacingDirection);
-    let message = buzzer;
+    let message = String(buzzer); // the hardware expects a short numeric code
 
     // Send message to ESP
     await bleConnectionInstance.sendMessage(message);
 
-    return null;
+    return null; // null indicates success
   } catch (err) {
     console.error('Error sending friend notification:', err);
-    return null;
+    return err;
   }
 
   // Get buzzer code for direction (each buzzer or buzzer combination has 45 degrees)
@@ -146,21 +187,17 @@ function toDeg(rad) {
   return rad * 180 / Math.PI;
 }
 
-
 const LOCATION_API_URL = "http://localhost:5007/api/location";
 
 // Get location of a user from database
 async function getLocation(user) {
   try {
-    // Try single-user endpoint
     const res = await fetch(LOCATION_API_URL + '/' + encodeURIComponent(user));
     if (res.ok) {
       let userLocation = await res.json();
       console.log("Fetched location for", user);
       return userLocation;
     }
-
-    // Other non-ok responses
     console.warn(`Unexpected response fetching location for ${user}:`, res.status);
     return null;
   } catch (err) {
@@ -171,4 +208,4 @@ async function getLocation(user) {
 
 window.addEventListener("load", loadFriends);
 
-export { sendFriendNotification };
+export { sendFriendNotification, loadFriends };

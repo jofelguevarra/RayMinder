@@ -5,6 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Friends - RayMinder</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* small helper styles for the friend list/action buttons */
+    #friends-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px;
+      border-radius: 6px;
+      background: #fff;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .friend-actions button {
+      margin-left: 6px;
+      padding: 6px 8px;
+      font-size: 0.95em;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-open { background: #ff9800; color: white; }
+    .btn-remind { background: #4caf50; color: white; }
+    .status-msg { margin-top: 8px; font-weight: bold; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -15,6 +39,7 @@
     <div id="friends-section">
       <h2>Your Friends</h2>
       <ul id="friends-list"></ul>
+      <div id="friends-status" class="status-msg"></div>
     </div>
 
     <div id="add-friend-section">
@@ -25,11 +50,24 @@
 
     <div>
       <button onclick="window.location.href='you.html'">Back to You</button>
-
-      <!-- TODO: Remove this button after it was implemented that the message is automatically sent -->
-      <button id="testLocation">A friend needs to reapply</button>
+      <button id="show-reminder-mode">Remind a Friend to Reapply</button>
     </div>
-  </div>
+
+    <div id="reminder-section" style="display: none; margin-top: 15px;">
+      <h3>Select a friend to remind:</h3>
+      <ul id="reminder-friends-list"></ul>
+    </div>
+
+    <div id="friend-dashboard" style="display: none; margin-top: 15px;">
+      <h3 id="friend-name-display"></h3>
+      <div id="friend-status">
+        <p><strong>UV Index:</strong> <span id="friend-uv">--</span></p>
+        <p><strong>Next Application In:</strong> <span id="friend-timer">--</span></p>
+        <p><strong>Direction:</strong> <span id="friend-direction">--</span></p>
+      </div>
+      <button id="back-to-friends">Back to Friends List</button>
+    </div>
+
 
   <script type="module" src="friends.js"></script>
 </body>
