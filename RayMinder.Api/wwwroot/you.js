@@ -85,6 +85,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 }
 
+function updateLastAppliedDisplay(secondsAgo) {
+  if (!lastAppliedText) return;
+
+  let text = "";
+  if (secondsAgo < 60) {
+    text = `Applied ${secondsAgo}s ago`;
+  } else if (secondsAgo < 3600) {
+    const mins = Math.floor(secondsAgo / 60);
+    text = `Applied ${mins} min${mins !== 1 ? 's' : ''} ago`;
+  } else {
+    const hours = Math.floor(secondsAgo / 3600);
+    const mins = Math.floor((secondsAgo % 3600) / 60);
+    text = `Applied ${hours}h ${mins}m ago`;
+  }
+
+  lastAppliedText.textContent = text;
+}
+
   // --- BLE Communication ---
   document.getElementById('connectBtn').addEventListener('click', async () => {
     await bleConnectionInstance.connectBLE();
@@ -106,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Time of last application
       timeOfLastApplication = message.substring(1);
       console.log("Time of last application:", timeOfLastApplication, "seconds ago");
+      updateLastAppliedDisplay(timeOfLastApplication);
 
     } else if (message[0] == '2' && message.length <= 16) {
       // Time to next application
