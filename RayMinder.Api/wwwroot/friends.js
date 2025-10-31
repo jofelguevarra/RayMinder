@@ -3,6 +3,7 @@ import { bleConnectionInstance } from './BLEConnection.js';
 console.log("friends.js loaded");
 
 const API_URL = "http://localhost:5007/api/friends";
+const LOCATION_API_URL = "http://localhost:5007/api/location";
 const username = localStorage.getItem("username");
 
 const messageDiv = document.getElementById("user-info");
@@ -11,7 +12,7 @@ const friendsList = document.getElementById("friends-list");
 const addBtn = document.getElementById("add-friend-btn");
 const friendsStatus = document.getElementById("friends-status");
 
-// Helper to show status messages on the page
+// Show small status messages
 function showMessage(text, color = 'black') {
   if (friendsStatus) {
     friendsStatus.textContent = text;
@@ -20,7 +21,7 @@ function showMessage(text, color = 'black') {
   }
 }
 
-// Load friends list from API
+// Load all friends
 async function loadFriends() {
   try {
     if (!username) {
@@ -53,15 +54,15 @@ async function loadFriends() {
       friendsList.appendChild(li);
     });
 
-    // attach event listeners (delegation)
+    // Open friend dashboard in a separate page
     friendsList.querySelectorAll('.btn-open').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const friend = e.currentTarget.dataset.user;
-        // open friend-dashboard with query param
         window.location.href = `friend-dashboard.html?username=${encodeURIComponent(friend)}`;
       });
     });
 
+    // Remind a friend
     friendsList.querySelectorAll('.btn-remind').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const friend = e.currentTarget.dataset.user;
@@ -78,11 +79,11 @@ async function loadFriends() {
 
   } catch (err) {
     console.error("Error loading friends:", err);
-    showMessage ("Error loading your friends list", "red");
+    showMessage("Error loading your friends list", "red");
   }
 }
 
-// Add a friend
+// Add a new friend
 addBtn.addEventListener("click", async () => {
   const friendUsername = friendInput.value.trim();
   if (!friendUsername) {
@@ -114,52 +115,96 @@ addBtn.addEventListener("click", async () => {
     }
   } catch (err) {
     console.error("Error adding friend:", err);
-    showMessage("⚠️ Server connection error.", "red");
+    showMessage("Server connection error.", "red");
   }
 });
 
-// TEST button
-document.getElementById('testLocation').addEventListener('click', async () => {
-  let friend = "testuser"; // TODO: Replace with actual friend username if desired
-  await sendFriendNotification(friend);
+// “Remind a Friend” FEATURE – triggered from the main button
+document.getElementById('show-reminder-mode').addEventListener('click', async () => {
+  const reminderSection = document.getElementById('reminder-section');
+  const dashboard = document.getElementById('friend-dashboard');
+  const list = document.getElementById('reminder-friends-list');
+  
+  reminderSection.style.display = 'block';
+  dashboard.style.display = 'none';
+  list.innerHTML = '<li>Loading friends...</li>';
+
+  try {
+    const response = await fetch(`${API_URL}/${username}`);
+    const friends = await response.json();
+
+    list.innerHTML = '';
+
+    if (!friends || friends.length === 0) {
+      list.innerHTML = '<li>No friends found.</li>';
+      return;
+    }
+
+    friends.forEach(f => {
+      const li = document.createElement('li');
+      li.textContent = f.friendUsername;
+      li.style.cursor = 'pointer';
+      li.style.padding = '6px';
+      li.style.borderBottom = '1px solid #ddd';
+      li.addEventListener('click', () => openFriendDashboard(f.friendUsername));
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Error loading friends for reminder:", err);
+    list.innerHTML = '<li>Error loading friends.</li>';
+  }
 });
 
-// Send friend notification
+// Open mini friend dashboard
+function openFriendDashboard(friendUsername) {
+  document.getElementById('reminder-section').style.display = 'none';
+  const dashboard = document.getElementById('friend-dashboard');
+  dashboard.style.display = 'block';
+  document.getElementById('friend-name-display').textContent = friendUsername + "'s Dashboard";
+
+  // Placeholder data (to be replaced later with real friend data)
+  document.getElementById('friend-uv').textContent = "5";
+  document.getElementById('friend-timer').textContent = "00:15:23";
+  document.getElementById('friend-direction').textContent = "NE (45°)";
+}
+
+// Back to reminder list
+document.getElementById('back-to-friends').addEventListener('click', () => {
+  document.getElementById('friend-dashboard').style.display = 'none';
+  document.getElementById('reminder-section').style.display = 'block';
+});
+
+// Location + Notification + Direction Calculation
 async function sendFriendNotification(friendUsername) {
   try {
-    // Get location of user + friend
     const userLocation = await getLocation(username);
     const friendLocation = await getLocation(friendUsername);
 
-    if (!userLocation) {
-      console.error(`No location found for current user '${username}'`);
-      return new Error('missing user location');
-    }
+    if (!userLocation) return new Error('missing user location');
+    if (!friendLocation) return new Error('missing friend location');
 
-    if (!friendLocation) {
-      console.error(`No location found for friend '${friendUsername}'`);
-      return new Error('missing friend location');
-    }
-
-    // Get Bearing / Degree to the friend and rotate it by the RayMinder rotation
+    // Bearing and rotation
     let rotation = bleConnectionInstance.facingDirection || 0;
-    let totalFacingDirection = getBearing(userLocation.latitude, userLocation.longitude, friendLocation.latitude, friendLocation.longitude);
-    totalFacingDirection = (totalFacingDirection + rotation) % 360; // Rotate to fit the facing direction
+    let totalFacingDirection = getBearing(
+      userLocation.latitude,
+      userLocation.longitude,
+      friendLocation.latitude,
+      friendLocation.longitude
+    );
+    totalFacingDirection = (totalFacingDirection + rotation) % 360;
 
-    // Get buzzer(s) that should go off
+    // Which buzzer to activate
     let buzzer = getDirectionCode(totalFacingDirection);
-    let message = String(buzzer); // the hardware expects a short numeric code
+    let message = String(buzzer);
 
-    // Send message to ESP
     await bleConnectionInstance.sendMessage(message);
-
-    return null; // null indicates success
+    console.log(`Sent direction ${totalFacingDirection}° (buzzer ${buzzer}) to ESP`);
+    return null;
   } catch (err) {
     console.error('Error sending friend notification:', err);
     return err;
   }
 
-  // Get buzzer code for direction (each buzzer or buzzer combination has 45 degrees)
   function getDirectionCode(degree) {
     const codes = [5, 2, 6, 3, 7, 0, 4, 1];
     const index = Math.floor(((degree + 22.5) % 360) / 45);
@@ -167,38 +212,24 @@ async function sendFriendNotification(friendUsername) {
   }
 }
 
-// Get "Bearing" / facing direction from one location to another
 function getBearing(lat1, lon1, lat2, lon2) {
   const lat1Rad = toRad(lat1);
   const lat2Rad = toRad(lat2);
   const deltaLonRad = toRad(lon2 - lon1);
-
   const y = Math.sin(deltaLonRad) * Math.cos(lat2Rad);
-  const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(deltaLonRad);
+  const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) -
+            Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(deltaLonRad);
   const bearingRad = Math.atan2(y, x);
   return (toDeg(bearingRad) + 360) % 360;
 }
 
-function toRad(deg) {
- return deg * Math.PI / 180;
-}
+function toRad(deg) { return deg * Math.PI / 180; }
+function toDeg(rad) { return rad * 180 / Math.PI; }
 
-function toDeg(rad) {
-  return rad * 180 / Math.PI;
-}
-
-const LOCATION_API_URL = "http://localhost:5007/api/location";
-
-// Get location of a user from database
 async function getLocation(user) {
   try {
     const res = await fetch(LOCATION_API_URL + '/' + encodeURIComponent(user));
-    if (res.ok) {
-      let userLocation = await res.json();
-      console.log("Fetched location for", user);
-      return userLocation;
-    }
-    console.warn(`Unexpected response fetching location for ${user}:`, res.status);
+    if (res.ok) return await res.json();
     return null;
   } catch (err) {
     console.error('getLocation error:', err);
