@@ -76,6 +76,28 @@
       border-bottom: 1px solid #eee;
     }
 
+    /* Clean, smaller, and modern notification message styling */
+    #notifications-content div {
+      font-size: 0.85em;
+      color: #333;
+      background: #fffdf5;
+      border-radius: 6px;
+      margin: 6px;
+      padding: 8px 10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      line-height: 1.3;
+    }
+
+    #notifications-content div.read {
+      background: #f5f5f5;
+      color: #777;
+    }
+
+    #notifications-content div:hover {
+      background: #fff8e1;
+      transition: 0.3s;
+    }
+
     .nav-tabs {
       font-size: 1.1em;
       color: #616161;
@@ -146,7 +168,7 @@
       text-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
 
-    #reapply-btn, #connectBtn, #logoutBtn {
+    #reapply-btn, #connectBtn {
       background-color: #ff9800;
       color: white;
       border: none;
@@ -158,8 +180,24 @@
       margin: 5px;
     }
 
-    #reapply-btn:hover, #connectBtn:hover, #logoutBtn:hover {
+    #reapply-btn:hover, #connectBtn:hover {
       background-color: #e65100;
+    }
+
+    #logoutBtn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 5px;
+    }
+
+    #logoutBtn:hover {
+      background-color: #0056b3;
     }
 
     #alert-message {
