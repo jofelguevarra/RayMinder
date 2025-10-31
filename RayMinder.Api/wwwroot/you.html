@@ -284,19 +284,8 @@
 
         notifications.forEach(n => {
           const div = document.createElement('div');
-          div.style.cssText = `
-            background: ${n.isRead ? '#fafafa' : '#fffde7'};
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin: 6px;
-            font-size: 0.95em;
-            color: #333;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: background 0.3s;
-          `;
-          div.innerHTML = `<div>${n.message}</div>`;
-          div.addEventListener('mouseenter', () => div.style.background = '#fff8dc');
-          div.addEventListener('mouseleave', () => div.style.background = n.isRead ? '#fafafa' : '#fffde7');
+          div.textContent = n.message;
+          if (n.isRead) div.classList.add('read');
           container.appendChild(div);
         });
 
