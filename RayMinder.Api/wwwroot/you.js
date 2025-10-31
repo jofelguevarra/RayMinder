@@ -27,6 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeOfLastApplication = null;
   let timeToNextApplication = null;
 
+  // Helper for time formatting
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return "00:00:00";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h < 10 ? '0' : ''}${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
   // Display UV
   function updateUVDisplay(index) {
     uvValue.textContent = index;
@@ -62,47 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update timer bar and display
   function updateTimerDisplay() {
-  const hours = Math.floor(timeRemaining / 3600);
-  const minutes = Math.floor((timeRemaining % 3600) / 60);
-  const seconds = timeRemaining % 60;
+    if (!timeRemaining || isNaN(timeRemaining)) {
+      timerText.textContent = "00:00:00";
+      timerBar.style.width = "100%";
+      return;
+    }
 
-  const timeString =
-    `${hours < 10 ? '0' : ''}${hours}:` +
-    `${minutes < 10 ? '0' : ''}${minutes}:` +
-    `${seconds < 10 ? '0' : ''}${seconds}`;
+    timerText.textContent = formatTime(timeRemaining);
 
-  timerText.textContent = timeString;
+    const percentage = (timeRemaining / timerDuration) * 100;
+    timerBar.style.width = `${percentage}%`;
 
-  const percentage = (timeRemaining / timerDuration) * 100;
-  timerBar.style.width = `${percentage}%`;
-
-  if (percentage <= 20) {
-    timerBar.style.backgroundColor = '#f44336';
-  } else if (percentage <= 50) {
-    timerBar.style.backgroundColor = '#ff9800';
-  } else {
-    timerBar.style.backgroundColor = '#4caf50';
-    timerText.style.color = '#fff';
-  }
-}
-
-function updateLastAppliedDisplay(secondsAgo) {
-  if (!lastAppliedText) return;
-
-  let text = "";
-  if (secondsAgo < 60) {
-    text = `Applied ${secondsAgo}s ago`;
-  } else if (secondsAgo < 3600) {
-    const mins = Math.floor(secondsAgo / 60);
-    text = `Applied ${mins} min${mins !== 1 ? 's' : ''} ago`;
-  } else {
-    const hours = Math.floor(secondsAgo / 3600);
-    const mins = Math.floor((secondsAgo % 3600) / 60);
-    text = `Applied ${hours}h ${mins}m ago`;
+    if (percentage <= 20) {
+      timerBar.style.backgroundColor = '#f44336';
+    } else if (percentage <= 50) {
+      timerBar.style.backgroundColor = '#ff9800';
+    } else {
+      timerBar.style.backgroundColor = '#4caf50';
+      timerText.style.color = '#fff';
+    }
   }
 
-  lastAppliedText.textContent = text;
-}
+  function updateLastAppliedDisplay(secondsAgo) {
+    if (!lastAppliedText) return;
+
+    let text = "";
+    if (secondsAgo < 60) {
+      text = `Applied ${secondsAgo}s ago`;
+    } else if (secondsAgo < 3600) {
+      const mins = Math.floor(secondsAgo / 60);
+      text = `Applied ${mins} min${mins !== 1 ? 's' : ''} ago`;
+    } else {
+      const hours = Math.floor(secondsAgo / 3600);
+      const mins = Math.floor((secondsAgo % 3600) / 60);
+      text = `Applied ${hours}h ${mins}m ago`;
+    }
+
+    lastAppliedText.textContent = text;
+  }
 
   // --- BLE Communication ---
   document.getElementById('connectBtn').addEventListener('click', async () => {
@@ -123,15 +129,14 @@ function updateLastAppliedDisplay(secondsAgo) {
 
     } else if (message[0] == '1' && message.length <= 16) {
       // Time of last application
-      timeOfLastApplication = message.substring(1);
+      timeOfLastApplication = parseInt(message.substring(1), 10);
       console.log("Time of last application:", timeOfLastApplication, "seconds ago");
       updateLastAppliedDisplay(timeOfLastApplication);
 
     } else if (message[0] == '2' && message.length <= 16) {
       // Time to next application
-      timeToNextApplication = message.substring(1);
+      timeToNextApplication = parseInt(message.substring(1), 10);
       console.log("Time to next application:", timeToNextApplication, "seconds");
-      // TODO: Update timer based on this value
 
       if (!isNaN(timeToNextApplication) && timeToNextApplication > 0) {
         console.log("Setting timer from ESP:", timeToNextApplication, "seconds");
@@ -150,7 +155,7 @@ function updateLastAppliedDisplay(secondsAgo) {
 
     return message;
   });
-  
+
   // Update "last applied" text every second
   setInterval(() => {
     if (timeOfLastApplication) {
@@ -182,21 +187,21 @@ function updateLastAppliedDisplay(secondsAgo) {
   }
 
   async function notifyFriendsToBuzz() {
-  try {
-    const username = localStorage.getItem("username");
-    const API_URL = "http://localhost:5007/api/friends";
-    const response = await fetch(`${API_URL}/${username}`);
-    if (!response.ok) return;
+    try {
+      const username = localStorage.getItem("username");
+      const API_URL = "http://localhost:5007/api/friends";
+      const response = await fetch(`${API_URL}/${username}`);
+      if (!response.ok) return;
 
-    const friends = await response.json();
-    for (const f of friends) {
-      console.log(`Notifying ${f.friendUsername} to reapply`);
-      await sendFriendNotification(f.friendUsername);
+      const friends = await response.json();
+      for (const f of friends) {
+        console.log(`Notifying ${f.friendUsername} to reapply`);
+        await sendFriendNotification(f.friendUsername);
+      }
+    } catch (err) {
+      console.error("Error notifying friends:", err);
     }
-  } catch (err) {
-    console.error("Error notifying friends:", err);
   }
-}
 
   // I reapplied button
   reapplyBtn.addEventListener('click', async () => {
@@ -224,7 +229,5 @@ function updateLastAppliedDisplay(secondsAgo) {
   }
 
   // --- Start processes ---
-  // fetchUV();
   startTimer();
-  // setInterval(fetchUV, 30000);
 });
