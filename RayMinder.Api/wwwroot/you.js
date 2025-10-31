@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const spfSelect = document.getElementById('spfSelect');
   const skinSelect = document.getElementById('skinSelect');
   const logoutBtn = document.getElementById('logout-btn');
+  const lastAppliedText = document.getElementById('last-applied');
 
   // --- Timer setup ---
   let timerDuration = 20 * 60;
@@ -149,6 +150,15 @@ function updateLastAppliedDisplay(secondsAgo) {
 
     return message;
   });
+  
+  // Update "last applied" text every second
+  setInterval(() => {
+    if (timeOfLastApplication) {
+      const nowSeconds = Math.floor(Date.now() / 1000);
+      const secondsAgo = nowSeconds - parseInt(timeOfLastApplication, 10);
+      updateLastAppliedDisplay(secondsAgo);
+    }
+  }, 1000);
 
   // When timer finishes
   async function triggerAlert() {
