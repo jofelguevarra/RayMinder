@@ -6,13 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const LOCATION_API_URL = "http://localhost:5007/api/location";
   const username = localStorage.getItem("username");
 
-  // Sections
   const menuSection = document.getElementById("menu-section");
   const addFriendSection = document.getElementById("add-friend-section");
   const friendsSection = document.getElementById("friends-section");
   const friendDashboard = document.getElementById("friend-dashboard");
 
-  // Elements
   const friendInput = document.getElementById("friend-username");
   const friendsList = document.getElementById("friends-list");
   const listStatus = document.getElementById("list-status");
@@ -21,22 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
   statusMsg.className = "status-msg";
   addFriendSection.appendChild(statusMsg);
 
-  // Buttons
   const btnShowAdd = document.getElementById("btn-show-add");
   const btnShowList = document.getElementById("btn-show-list");
   const btnBackMenuAdd = document.getElementById("btn-back-to-menu");
   const btnBackMenuList = document.getElementById("btn-back-menu");
   const btnBackFriends = document.getElementById("btn-back-friends");
 
-  // Friend dashboard elements
   const friendNameDisplay = document.getElementById("friend-name-display");
   const friendUV = document.getElementById("friend-uv");
   const friendTimer = document.getElementById("friend-timer");
   const friendLocation = document.getElementById("friend-location");
   const friendDirection = document.getElementById("friend-direction");
-  const remindFriendBtn = document.getElementById("remind-friend-btn");
 
-  // Helper to show messages
   function showMessage(target, text, color = "black") {
     if (target) {
       target.textContent = text;
@@ -45,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Navigation
   btnShowAdd.addEventListener("click", () => {
     menuSection.style.display = "none";
     friendsSection.style.display = "none";
@@ -76,7 +69,6 @@ document.addEventListener("DOMContentLoaded", () => {
     friendsSection.style.display = "block";
   });
 
-  // Add Friend
   addBtn.addEventListener("click", async () => {
     const friendUsername = friendInput.value.trim();
     if (!friendUsername) {
@@ -105,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Load Friends
   async function loadFriends() {
     try {
       if (!username) {
@@ -139,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
         friendsList.appendChild(li);
       });
 
-      // Remind button
       friendsList.querySelectorAll(".btn-remind").forEach((btn) => {
         btn.addEventListener("click", async (e) => {
           const friend = e.currentTarget.dataset.user;
@@ -154,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Locate button
       friendsList.querySelectorAll(".btn-open").forEach((btn) => {
         btn.addEventListener("click", async (e) => {
           const friend = e.currentTarget.dataset.user;
@@ -167,12 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Open Friend Dashboard
   async function openFriendDashboard(friendUsername) {
     friendsSection.style.display = "none";
     friendDashboard.style.display = "block";
 
-    friendNameDisplay.textContent = `Friend: ${friendUsername}`;
+    friendNameDisplay.textContent = friendUsername;
     friendUV.textContent = "--";
     friendTimer.textContent = "--";
     friendLocation.textContent = "--";
@@ -198,18 +186,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       friendDirection.textContent = "Unknown";
     }
-
-    remindFriendBtn.onclick = async () => {
-      const result = await sendFriendNotification(friendUsername);
-      if (result === null) {
-        alert(`Reminder sent to ${friendUsername}!`);
-      } else {
-        alert(`Failed to send reminder to ${friendUsername}.`);
-      }
-    };
   }
 
-  // BLE Reminder
   async function sendFriendNotification(friendUsername) {
     try {
       const userLocation = await getLocation(username);
