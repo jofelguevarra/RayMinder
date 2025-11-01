@@ -6,7 +6,6 @@
   <title>Friends - RayMinder</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* small helper styles for the friend list/action buttons */
     #friends-list li {
       display: flex;
       align-items: center;
@@ -17,16 +16,35 @@
       margin-bottom: 8px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
+
     .friend-actions button {
       margin-left: 6px;
       padding: 6px 8px;
-      font-size: 0.95em;
+      font-size: 0.9em;
       border-radius: 6px;
       border: none;
       cursor: pointer;
     }
+
     .btn-open { background: #ff9800; color: white; }
     .btn-remind { background: #4caf50; color: white; }
+
+    .menu-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .menu-btn:hover {
+      background: #0056b3;
+    }
+
     .status-msg { margin-top: 8px; font-weight: bold; }
   </style>
 </head>
@@ -34,40 +52,29 @@
   <div class="container">
     <h1>Friends</h1>
 
-    <div id="user-info"></div>
-
-    <div id="friends-section">
-      <h2>Your Friends</h2>
-      <ul id="friends-list"></ul>
-      <div id="friends-status" class="status-msg"></div>
+    <!-- Main menu buttons -->
+    <div id="menu-section">
+      <button class="menu-btn" id="btn-show-add"> Add Friend</button>
+      <button class="menu-btn" id="btn-show-list"> Friends List</button>
+      <button class="menu-btn" onclick="window.location.href='you.html'"> Back to You</button>
     </div>
 
-    <div id="add-friend-section">
+    <!-- Add Friend Section (hidden initially) -->
+    <div id="add-friend-section" style="display: none;">
       <h2>Add a Friend</h2>
       <input type="text" id="friend-username" placeholder="Enter friend's username">
       <button id="add-friend-btn">Add Friend</button>
+      <div id="friends-status" class="status-msg"></div>
     </div>
 
-    <div>
-      <button onclick="window.location.href='you.html'">Back to You</button>
-      <button id="show-reminder-mode">Remind a Friend to Reapply</button>
+    <!-- Friends List Section (hidden initially) -->
+    <div id="friends-section" style="display: none;">
+      <h2>Your Friends</h2>
+      <ul id="friends-list"></ul>
+      <div id="list-status" class="status-msg"></div>
+      <button class="menu-btn" id="btn-back-menu"> Back to Menu</button>
     </div>
-
-    <div id="reminder-section" style="display: none; margin-top: 15px;">
-      <h3>Select a friend to remind:</h3>
-      <ul id="reminder-friends-list"></ul>
-    </div>
-
-    <div id="friend-dashboard" style="display: none; margin-top: 15px;">
-      <h3 id="friend-name-display"></h3>
-      <div id="friend-status">
-        <p><strong>UV Index:</strong> <span id="friend-uv">--</span></p>
-        <p><strong>Next Application In:</strong> <span id="friend-timer">--</span></p>
-        <p><strong>Direction:</strong> <span id="friend-direction">--</span></p>
-      </div>
-      <button id="back-to-friends">Back to Friends List</button>
-    </div>
-
+  </div>
 
   <script type="module" src="friends.js"></script>
 </body>
