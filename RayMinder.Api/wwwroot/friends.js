@@ -2,59 +2,90 @@ import { bleConnectionInstance } from './BLEConnection.js';
 console.log("friends.js loaded");
 
 const API_URL = "http://localhost:5007/api/friends";
+const LOCATION_API_URL = "http://localhost:5007/api/location";
 const username = localStorage.getItem("username");
 
-// UI Elements
+// Sections
+const menuSection = document.getElementById("menu-section");
 const addFriendSection = document.getElementById("add-friend-section");
 const friendsSection = document.getElementById("friends-section");
-const menuSection = document.getElementById("menu-section");
+
+// New Friend Dashboard section
+let friendDashboard = document.getElementById("friend-dashboard");
+if (!friendDashboard) {
+  friendDashboard = document.createElement("div");
+  friendDashboard.id = "friend-dashboard";
+  friendDashboard.style.display = "none";
+  friendDashboard.innerHTML = `
+    <h2>Friend Dashboard</h2>
+    <div id="friend-info"></div>
+    <button class="menu-btn" id="btn-back-friends">Back to Friends List</button>
+  `;
+  document.querySelector(".container").appendChild(friendDashboard);
+}
+
+// Elements
 const friendsList = document.getElementById("friends-list");
 const statusMsg = document.getElementById("friends-status");
 const listStatus = document.getElementById("list-status");
 const friendInput = document.getElementById("friend-username");
 const addBtn = document.getElementById("add-friend-btn");
 
-// Menu buttons
+// Buttons
 const btnShowAdd = document.getElementById("btn-show-add");
 const btnShowList = document.getElementById("btn-show-list");
-const btnBackMenu = document.getElementById("btn-back-menu");
-const btnBackToMenu = document.getElementById("btn-back-to-menu");
+const btnBackYou = document.getElementById("btn-back-you");
+const btnBackMenuAdd = document.getElementById("btn-back-menu-add");
+const btnBackMenuList = document.getElementById("btn-back-menu-list");
+const btnBackFriends = document.getElementById("btn-back-friends");
 
-// Show/hide sections
+// Navigation 
 btnShowAdd.addEventListener("click", () => {
   menuSection.style.display = "none";
   friendsSection.style.display = "none";
+  friendDashboard.style.display = "none";
   addFriendSection.style.display = "block";
 });
 
 btnShowList.addEventListener("click", async () => {
   menuSection.style.display = "none";
   addFriendSection.style.display = "none";
+  friendDashboard.style.display = "none";
   friendsSection.style.display = "block";
   await loadFriends();
 });
 
-btnBackMenu.addEventListener("click", () => {
+btnBackYou.addEventListener("click", () => {
+  window.location.href = "you.html";
+});
+
+btnBackMenuAdd.addEventListener("click", () => {
   addFriendSection.style.display = "none";
+  menuSection.style.display = "block";
+});
+
+btnBackMenuList.addEventListener("click", () => {
   friendsSection.style.display = "none";
   menuSection.style.display = "block";
 });
 
-btnBackToMenu.addEventListener("click", () => {
-  addFriendSection.style.display = "none";
-  menuSection.style.display = "block";
-});
+if (btnBackFriends) {
+  btnBackFriends.addEventListener("click", () => {
+    friendDashboard.style.display = "none";
+    friendsSection.style.display = "block";
+  });
+}
 
-// Helper for messages
-function showMessage(target, text, color = 'black') {
+// Helper Message Function 
+function showMessage(target, text, color = "black") {
   if (target) {
     target.textContent = text;
     target.style.color = color;
-    setTimeout(() => { target.textContent = ''; }, 3000);
+    setTimeout(() => { target.textContent = ""; }, 3000);
   }
 }
 
-// Load friends list
+// Load Friends
 async function loadFriends() {
   try {
     if (!username) {
@@ -88,22 +119,24 @@ async function loadFriends() {
       friendsList.appendChild(li);
     });
 
-    friendsList.querySelectorAll('.btn-open').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Button: Open Friend Dashboard
+    friendsList.querySelectorAll(".btn-open").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
         const friend = e.currentTarget.dataset.user;
-        window.location.href = `friend-dashboard.html?username=${encodeURIComponent(friend)}`;
+        await openFriendDashboard(friend);
       });
     });
 
-    friendsList.querySelectorAll('.btn-remind').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
+    // Button: Remind Friend
+    friendsList.querySelectorAll(".btn-remind").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
         const friend = e.currentTarget.dataset.user;
-        showMessage(listStatus, `Sending reminder to ${friend}...`, 'orange');
+        showMessage(listStatus, `Sending reminder to ${friend}...`, "orange");
         const res = await sendFriendNotification(friend);
         if (res === null) {
-          showMessage(listStatus, `Reminder sent to ${friend}.`, 'green');
+          showMessage(listStatus, `Reminder sent to ${friend}.`, "green");
         } else {
-          showMessage(listStatus, `Failed to remind ${friend}.`, 'red');
+          showMessage(listStatus, `Failed to remind ${friend}.`, "red");
           console.error(res);
         }
       });
@@ -115,7 +148,7 @@ async function loadFriends() {
   }
 }
 
-// Add a friend 
+// Add Friend
 addBtn.addEventListener("click", async () => {
   const friendUsername = friendInput.value.trim();
   if (!friendUsername) {
@@ -146,7 +179,35 @@ addBtn.addEventListener("click", async () => {
   }
 });
 
-// Friend Notification
+// Open Friend Dashboard
+async function openFriendDashboard(friendUsername) {
+  try {
+    friendsSection.style.display = "none";
+    addFriendSection.style.display = "none";
+    menuSection.style.display = "none";
+    friendDashboard.style.display = "block";
+
+    const friendInfoDiv = document.getElementById("friend-info");
+    friendInfoDiv.innerHTML = `<p>Loading ${friendUsername}'s data...</p>`;
+
+    const location = await getLocation(friendUsername);
+    if (!location) {
+      friendInfoDiv.innerHTML = `<p>Unable to fetch ${friendUsername}'s location.</p>`;
+      return;
+    }
+
+    friendInfoDiv.innerHTML = `
+      <p><strong>Username:</strong> ${friendUsername}</p>
+      <p><strong>Latitude:</strong> ${location.latitude}</p>
+      <p><strong>Longitude:</strong> ${location.longitude}</p>
+      <p><strong>Last Updated:</strong> ${new Date(location.timestamp || Date.now()).toLocaleString()}</p>
+    `;
+  } catch (err) {
+    console.error("Error opening friend dashboard:", err);
+  }
+}
+
+// Send Reminder 
 async function sendFriendNotification(friendUsername) {
   try {
     const userLocation = await getLocation(username);
@@ -175,6 +236,7 @@ async function sendFriendNotification(friendUsername) {
   }
 }
 
+// Helpers
 function getDirectionCode(degree) {
   const codes = [5, 2, 6, 3, 7, 0, 4, 1];
   const index = Math.floor(((degree + 22.5) % 360) / 45);
@@ -196,10 +258,9 @@ function getBearing(lat1, lon1, lat2, lon2) {
   return (toDeg(bearingRad) + 360) % 360;
 }
 
-const LOCATION_API_URL = "http://localhost:5007/api/location";
 async function getLocation(user) {
   try {
-    const res = await fetch(LOCATION_API_URL + '/' + encodeURIComponent(user));
+    const res = await fetch(`${LOCATION_API_URL}/${encodeURIComponent(user)}`);
     if (res.ok) return await res.json();
     return null;
   } catch (err) {
