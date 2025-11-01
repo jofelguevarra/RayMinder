@@ -2,27 +2,25 @@ import { bleConnectionInstance } from './BLEConnection.js';
 console.log("friends.js loaded");
 
 const API_URL = "http://localhost:5007/api/friends";
-const LOCATION_API_URL = "http://localhost:5007/api/location";
 const username = localStorage.getItem("username");
 
-// UI sections
-const menuSection = document.getElementById("menu-section");
+// UI Elements
 const addFriendSection = document.getElementById("add-friend-section");
 const friendsSection = document.getElementById("friends-section");
-
-// UI elements
-const friendInput = document.getElementById("friend-username");
-const addBtn = document.getElementById("add-friend-btn");
+const menuSection = document.getElementById("menu-section");
 const friendsList = document.getElementById("friends-list");
 const statusMsg = document.getElementById("friends-status");
 const listStatus = document.getElementById("list-status");
+const friendInput = document.getElementById("friend-username");
+const addBtn = document.getElementById("add-friend-btn");
 
 // Menu buttons
 const btnShowAdd = document.getElementById("btn-show-add");
 const btnShowList = document.getElementById("btn-show-list");
 const btnBackMenu = document.getElementById("btn-back-menu");
+const btnBackToMenu = document.getElementById("btn-back-to-menu");
 
-// Toggling sections
+// Show/hide sections
 btnShowAdd.addEventListener("click", () => {
   menuSection.style.display = "none";
   friendsSection.style.display = "none";
@@ -42,36 +40,19 @@ btnBackMenu.addEventListener("click", () => {
   menuSection.style.display = "block";
 });
 
-// Add friend functionality
-addBtn.addEventListener("click", async () => {
-  const friendUsername = friendInput.value.trim();
-  if (!friendUsername) {
-    showMessage(statusMsg, "Please enter a friend's username.", "red");
-    return;
-  }
-
-  const data = { username, friendUsername };
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      showMessage(statusMsg, result.message || "Friend added successfully!", "green");
-      friendInput.value = "";
-    } else {
-      showMessage(statusMsg, result.message || "Failed to add friend.", "red");
-    }
-  } catch (err) {
-    console.error("Error adding friend:", err);
-    showMessage(statusMsg, "Server connection error.", "red");
-  }
+btnBackToMenu.addEventListener("click", () => {
+  addFriendSection.style.display = "none";
+  menuSection.style.display = "block";
 });
+
+// Helper for messages
+function showMessage(target, text, color = 'black') {
+  if (target) {
+    target.textContent = text;
+    target.style.color = color;
+    setTimeout(() => { target.textContent = ''; }, 3000);
+  }
+}
 
 // Load friends list
 async function loadFriends() {
@@ -107,24 +88,22 @@ async function loadFriends() {
       friendsList.appendChild(li);
     });
 
-    // Open dashboard
-    friendsList.querySelectorAll(".btn-open").forEach(btn => {
-      btn.addEventListener("click", (e) => {
+    friendsList.querySelectorAll('.btn-open').forEach(btn => {
+      btn.addEventListener('click', (e) => {
         const friend = e.currentTarget.dataset.user;
         window.location.href = `friend-dashboard.html?username=${encodeURIComponent(friend)}`;
       });
     });
 
-    // Remind button
-    friendsList.querySelectorAll(".btn-remind").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
+    friendsList.querySelectorAll('.btn-remind').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
         const friend = e.currentTarget.dataset.user;
-        showMessage(listStatus, `Sending reminder to ${friend}...`, "orange");
+        showMessage(listStatus, `Sending reminder to ${friend}...`, 'orange');
         const res = await sendFriendNotification(friend);
         if (res === null) {
-          showMessage(listStatus, `Reminder sent to ${friend}.`, "green");
+          showMessage(listStatus, `Reminder sent to ${friend}.`, 'green');
         } else {
-          showMessage(listStatus, `Failed to remind ${friend}.`, "red");
+          showMessage(listStatus, `Failed to remind ${friend}.`, 'red');
           console.error(res);
         }
       });
@@ -136,7 +115,38 @@ async function loadFriends() {
   }
 }
 
-// Send friend notification
+// Add a friend 
+addBtn.addEventListener("click", async () => {
+  const friendUsername = friendInput.value.trim();
+  if (!friendUsername) {
+    showMessage(statusMsg, "Please enter a friend's username.", "red");
+    return;
+  }
+
+  const data = { username, friendUsername };
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      showMessage(statusMsg, result.message || "Friend added!", "green");
+      friendInput.value = "";
+    } else {
+      showMessage(statusMsg, result.message || "Failed to add friend.", "red");
+    }
+  } catch (err) {
+    console.error("Error adding friend:", err);
+    showMessage(statusMsg, "Server connection error.", "red");
+  }
+});
+
+// Friend Notification
 async function sendFriendNotification(friendUsername) {
   try {
     const userLocation = await getLocation(username);
@@ -165,7 +175,6 @@ async function sendFriendNotification(friendUsername) {
   }
 }
 
-// Location and direction helpers
 function getDirectionCode(degree) {
   const codes = [5, 2, 6, 3, 7, 0, 4, 1];
   const index = Math.floor(((degree + 22.5) % 360) / 45);
@@ -187,22 +196,14 @@ function getBearing(lat1, lon1, lat2, lon2) {
   return (toDeg(bearingRad) + 360) % 360;
 }
 
+const LOCATION_API_URL = "http://localhost:5007/api/location";
 async function getLocation(user) {
   try {
-    const res = await fetch(`${LOCATION_API_URL}/${encodeURIComponent(user)}`);
+    const res = await fetch(LOCATION_API_URL + '/' + encodeURIComponent(user));
     if (res.ok) return await res.json();
     return null;
   } catch (err) {
     console.error("getLocation error:", err);
     return null;
-  }
-}
-
-// Message display helper
-function showMessage(target, text, color = "black") {
-  if (target) {
-    target.textContent = text;
-    target.style.color = color;
-    setTimeout(() => { target.textContent = ''; }, 3000);
   }
 }
