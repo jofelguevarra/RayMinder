@@ -10,7 +10,7 @@ const menuSection = document.getElementById("menu-section");
 const addFriendSection = document.getElementById("add-friend-section");
 const friendsSection = document.getElementById("friends-section");
 
-// New Friend Dashboard section
+// Create Friend Dashboard Section
 let friendDashboard = document.getElementById("friend-dashboard");
 if (!friendDashboard) {
   friendDashboard = document.createElement("div");
@@ -37,17 +37,20 @@ const btnShowList = document.getElementById("btn-show-list");
 const btnBackYou = document.getElementById("btn-back-you");
 const btnBackMenuAdd = document.getElementById("btn-back-menu-add");
 const btnBackMenuList = document.getElementById("btn-back-menu-list");
-const btnBackFriends = document.getElementById("btn-back-friends");
+
+function safeAddListener(button, event, handler) {
+  if (button) button.addEventListener(event, handler);
+}
 
 // Navigation 
-btnShowAdd.addEventListener("click", () => {
+safeAddListener(btnShowAdd, "click", () => {
   menuSection.style.display = "none";
   friendsSection.style.display = "none";
   friendDashboard.style.display = "none";
   addFriendSection.style.display = "block";
 });
 
-btnShowList.addEventListener("click", async () => {
+safeAddListener(btnShowList, "click", async () => {
   menuSection.style.display = "none";
   addFriendSection.style.display = "none";
   friendDashboard.style.display = "none";
@@ -55,28 +58,29 @@ btnShowList.addEventListener("click", async () => {
   await loadFriends();
 });
 
-btnBackYou.addEventListener("click", () => {
+safeAddListener(btnBackYou, "click", () => {
   window.location.href = "you.html";
 });
 
-btnBackMenuAdd.addEventListener("click", () => {
+safeAddListener(btnBackMenuAdd, "click", () => {
   addFriendSection.style.display = "none";
   menuSection.style.display = "block";
 });
 
-btnBackMenuList.addEventListener("click", () => {
+safeAddListener(btnBackMenuList, "click", () => {
   friendsSection.style.display = "none";
   menuSection.style.display = "block";
 });
 
-if (btnBackFriends) {
-  btnBackFriends.addEventListener("click", () => {
+// Back to Friends from Dashboard
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "btn-back-friends") {
     friendDashboard.style.display = "none";
     friendsSection.style.display = "block";
-  });
-}
+  }
+});
 
-// Helper Message Function 
+// Message Helper
 function showMessage(target, text, color = "black") {
   if (target) {
     target.textContent = text;
@@ -85,7 +89,7 @@ function showMessage(target, text, color = "black") {
   }
 }
 
-// Load Friends
+// Load Friends 
 async function loadFriends() {
   try {
     if (!username) {
@@ -119,7 +123,7 @@ async function loadFriends() {
       friendsList.appendChild(li);
     });
 
-    // Button: Open Friend Dashboard
+    // Open Dashboard
     friendsList.querySelectorAll(".btn-open").forEach(btn => {
       btn.addEventListener("click", async (e) => {
         const friend = e.currentTarget.dataset.user;
@@ -127,7 +131,7 @@ async function loadFriends() {
       });
     });
 
-    // Button: Remind Friend
+    // Remind
     friendsList.querySelectorAll(".btn-remind").forEach(btn => {
       btn.addEventListener("click", async (e) => {
         const friend = e.currentTarget.dataset.user;
@@ -148,8 +152,8 @@ async function loadFriends() {
   }
 }
 
-// Add Friend
-addBtn.addEventListener("click", async () => {
+// Add Friend 
+safeAddListener(addBtn, "click", async () => {
   const friendUsername = friendInput.value.trim();
   if (!friendUsername) {
     showMessage(statusMsg, "Please enter a friend's username.", "red");
@@ -179,7 +183,7 @@ addBtn.addEventListener("click", async () => {
   }
 });
 
-// Open Friend Dashboard
+// Friend Dashboard 
 async function openFriendDashboard(friendUsername) {
   try {
     friendsSection.style.display = "none";
@@ -188,6 +192,8 @@ async function openFriendDashboard(friendUsername) {
     friendDashboard.style.display = "block";
 
     const friendInfoDiv = document.getElementById("friend-info");
+    if (!friendInfoDiv) return;
+
     friendInfoDiv.innerHTML = `<p>Loading ${friendUsername}'s data...</p>`;
 
     const location = await getLocation(friendUsername);
@@ -207,7 +213,7 @@ async function openFriendDashboard(friendUsername) {
   }
 }
 
-// Send Reminder 
+// Reminder Logic 
 async function sendFriendNotification(friendUsername) {
   try {
     const userLocation = await getLocation(username);
@@ -236,7 +242,7 @@ async function sendFriendNotification(friendUsername) {
   }
 }
 
-// Helpers
+// Helpers 
 function getDirectionCode(degree) {
   const codes = [5, 2, 6, 3, 7, 0, 4, 1];
   const index = Math.floor(((degree + 22.5) % 360) / 45);
