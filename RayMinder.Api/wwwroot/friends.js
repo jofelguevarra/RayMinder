@@ -2,8 +2,8 @@ import { bleConnectionInstance } from './BLEConnection.js';
 console.log("friends.js loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "http://localhost:5007/api/friends";
-  const LOCATION_API_URL = "http://localhost:5007/api/location";
+  const API_URL = "http://rayminder.onrender.com/api/friends";
+  const LOCATION_API_URL = "http://rayminder.onrender.com/api/location";
   const username = localStorage.getItem("username");
 
   const menuSection = document.getElementById("menu-section");
