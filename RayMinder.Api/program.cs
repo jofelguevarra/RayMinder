@@ -43,7 +43,7 @@ app.UseCors("AllowAll");
     app.UseSwagger();
     app.UseSwaggerUI();
 
-app.UseHttpsRedirection(); // optional but recommended
+app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
