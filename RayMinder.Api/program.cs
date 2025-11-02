@@ -40,11 +40,8 @@ app.UseStaticFiles();
 // Apply CORS before routing or authorization
 app.UseCors("AllowAll");
 
-if (app.Environment.IsDevelopment())
-{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection(); // optional but recommended
 app.UseAuthorization();
