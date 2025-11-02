@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Set the port to 5007
-builder.WebHost.UseUrls("http://0.0.0.0:5007");
+// builder.WebHost.UseUrls("http://0.0.0.0:5007");
 
 // Add services
 builder.Services.AddControllers();

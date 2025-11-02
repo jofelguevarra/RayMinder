@@ -12,7 +12,7 @@ const remindBtn = document.getElementById('remindFriend');
 const findBtn = document.getElementById('findFriend');
 const statusEl = document.getElementById('status');
 
-const LOCATION_API_URL = "http://localhost:5007/api/location";
+const LOCATION_API_URL = "/api/location";
 
 friendNameEl.textContent = friendUsername || 'Friend';
 

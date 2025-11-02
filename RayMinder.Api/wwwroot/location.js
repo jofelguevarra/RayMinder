@@ -1,7 +1,7 @@
 // location.js
 
 // API base URL
-const API_URL = "http://rayminder.onrender.com/api/location";
+const API_URL = "/api/location";
 
 // Get the logged-in user's username from localStorage
 const username = localStorage.getItem("username");

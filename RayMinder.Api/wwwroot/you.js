@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function notifyFriendsToBuzz() {
     try {
       const username = localStorage.getItem("username");
-      const API_URL = "http://rayminder.onrender.com/api/friends";
+      const API_URL = "/api/friends";
       const response = await fetch(`${API_URL}/${username}`);
       if (!response.ok) return;
 
