@@ -90,7 +90,8 @@ function degToCompass(num) {
 // wire up buttons
 remindBtn.addEventListener('click', async () => {
   statusEl.textContent = `Sending reminder to ${friendUsername}...`;
-  const res = await sendFriendNotification(friendUsername);
+  const username = localStorage.getItem("username");
+  const res = await sendFriendNotification(username, friendUsername);
   if (res === null) {
     statusEl.textContent = 'Reminder sent!';
     statusEl.style.color = 'green';
@@ -103,7 +104,8 @@ remindBtn.addEventListener('click', async () => {
 // "Find friend" triggers the buzzer via same send function (hardware will buzz toward friend)
 findBtn.addEventListener('click', async () => {
   statusEl.textContent = `Triggering buzz toward ${friendUsername}...`;
-  const res = await sendFriendNotification(friendUsername);
+  const username = localStorage.getItem("username");
+  const res = await sendFriendNotification(username, friendUsername);
   if (res === null) {
     statusEl.textContent = 'Buzz triggered!';
     statusEl.style.color = 'green';

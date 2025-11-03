@@ -7,6 +7,7 @@ export class BLEConnection {
   }
 
   async connectBLE() {
+    console.log("Start connection to ESP32...");
     try {
       this.bleDevice = await navigator.bluetooth.requestDevice({
         filters: [{ name: 'ESP32-C3' }],

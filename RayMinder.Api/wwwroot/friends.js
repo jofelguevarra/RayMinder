@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", async (e) => {
           const friend = e.currentTarget.dataset.user;
           showMessage(listStatus, `Sending reminder to ${friend}...`, "orange");
-          const res = await sendFriendNotification(friend);
+          const res = await sendFriendNotification(username, friend);
           if (res === null) {
             showMessage(listStatus, `Reminder sent to ${friend}.`, "green");
           } else {
@@ -188,33 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function sendFriendNotification(friendUsername) {
-    try {
-      const userLocation = await getLocation(username);
-      const friendLocation = await getLocation(friendUsername);
-
-      if (!userLocation || !friendLocation) {
-        return new Error("Missing location data");
-      }
-
-      const rotation = bleConnectionInstance.facingDirection || 0;
-      let totalFacingDirection = getBearing(
-        userLocation.latitude,
-        userLocation.longitude,
-        friendLocation.latitude,
-        friendLocation.longitude
-      );
-      totalFacingDirection = (totalFacingDirection + rotation) % 360;
-
-      let buzzer = getDirectionCode(totalFacingDirection);
-      await bleConnectionInstance.sendMessage(String(buzzer));
-      return null;
-    } catch (err) {
-      console.error("Error sending friend notification:", err);
-      return err;
-    }
-  }
-
   function getDirectionCode(degree) {
     const codes = [5, 2, 6, 3, 7, 0, 4, 1];
     const index = Math.floor(((degree + 22.5) % 360) / 45);
@@ -246,3 +219,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+export async function sendFriendNotification(username, friendUsername) {
+  try {
+    const userLocation = await getLocation(username);
+    const friendLocation = await getLocation(friendUsername);
+
+    if (!userLocation || !friendLocation) {
+      return new Error("Missing location data");
+    }
+
+    const rotation = bleConnectionInstance.facingDirection || 0;
+    let totalFacingDirection = getBearing(
+      userLocation.latitude,
+      userLocation.longitude,
+      friendLocation.latitude,
+      friendLocation.longitude
+    );
+    totalFacingDirection = (totalFacingDirection + rotation) % 360;
+
+    let buzzer = getDirectionCode(totalFacingDirection);
+    await bleConnectionInstance.sendMessage(String(buzzer));
+    return null;
+  } catch (err) {
+    console.error("Error sending friend notification:", err);
+    return err;
+  }
+}

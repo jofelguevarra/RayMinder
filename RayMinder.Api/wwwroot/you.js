@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const friendsTab = document.getElementById('friendsTab');
   const spfSelect = document.getElementById('spfSelect');
   const skinSelect = document.getElementById('skinSelect');
-  const logoutBtn = document.getElementById('logout-btn');
   const lastAppliedText = document.getElementById('last-applied');
 
   // --- Timer setup ---
@@ -196,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const friends = await response.json();
       for (const f of friends) {
         console.log(`Notifying ${f.friendUsername} to reapply`);
-        await sendFriendNotification(f.friendUsername);
+        await sendFriendNotification(username, f.friendUsername);
       }
     } catch (err) {
       console.error("Error notifying friends:", err);
