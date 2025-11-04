@@ -24,6 +24,9 @@ export class BLEConnection {
 
       console.log("Connected to ESP32 BLE!");
       console.log(this.bleCharacteristic);
+
+      // Send message that values should be set to start
+      await this.sendMessage("2");
     } catch (error) {
       console.error(error);
     }
